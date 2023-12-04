@@ -1,4 +1,4 @@
-<h3><i class="fa-brands fa-shopify"></i> Bán Hàng Tại Quầy</h3>
+<h3><i class="fa-brands fa-shopify" ></i> Bán Hàng Tại Quầy</h3>
 
  <div style="padding: 10px;">
   <button ng-click="addbill()" class="btn btn-dark"><i class="fa-solid fa-plus"></i> Tạo hóa đơn</button>
@@ -119,7 +119,7 @@
       <h4>Thông Tin Giao Hàng</h4>
       <div>
         <div>
-          Khách hàng <button style="border: none;"><i class="fa-solid fa-circle-plus"></i></button>
+          Khách hàng <button style="border: none;"  data-bs-toggle="modal" data-bs-target="#addKH"><i class="fa-solid fa-circle-plus"></i></button>
           <select class="haninput" ng-click="chondiachi()" id="khachhang" >
             <option value="0">Khách lẻ</option>
             <option  ng-repeat="kh in listCustomer" value="{{kh.id}}">{{kh.fullname}} ({{kh.code}})</option>
@@ -200,7 +200,7 @@
         <div id="muaonline" style="display: none;">
           Đơn vị vận chuyển
           <div><img style="width: 100px; height: 50px;" src="../../assets/images/Logo-GHN.png"></div>
-        </div>
+        </div> 
         
         <div >
          
@@ -210,7 +210,7 @@
           <div class="custom-radio">
             <input ng-click="magiamgia()" type="radio"  id="chuongtrinhkhuyenmaiCheck" name="magiam" checked><label for="chuongtrinhkhuyenmaiCheck">Chương trình khuyến mãi</label></span>
             <span id="maGiamGiaKH" style="display: none;"><input ng-click="magiamgia()" type="radio"  id="magiamgiaCheck" name="magiam"><label for="magiamgiaCheck">Phiếu giảm giá</label></span>
-          </div>
+          </div> 
          
           <div id="magiamgia" style="display: none;">
             <input class="input-group-text" style="width: 250px;" type="text" id="code-coupon" placeholder="Mã giảm giá nếu có...">
@@ -282,7 +282,12 @@
   <div class="popup-content">
     <!-- Nội dung của popup -->
     <h1>Danh sách sản phẩm </h1>
-    <div class="timkiem"><input class="input-group-text" id="name" type="text" placeholder="Tìm theo mã hoặc tên sản phẩm.."><button class="btn btn-dark" ng-click="timkiem()"><i class="fa-solid fa-magnifying-glass"></i></button></div>
+    <div class="timkiem">
+      <input class="input-group-text" id="name" type="text" placeholder="Tìm theo mã hoặc tên sản phẩm..">
+      <button class="btn btn-dark" ng-click="timkiem()"><i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button class="btn btn-primary" ng-click="togglePopup()" style="margin-left: 300px;">Đóng</button>
+    </div>
     <div>
       <div class="row">
         <div class="col-md-6 loc"><label>Màu Sắc</label>
@@ -350,7 +355,7 @@
                         </span>
                     </span>
                     <br>
-                </div>
+                </div> 
             </td>
             <td class="text-center">
               <span ng-repeat="pro in listPro">
@@ -636,4 +641,102 @@
    </div>
    <div class="loading-overlay" ng-show="isLoading">
     <div class="loading-spinner"></div>
+
+  
+  </div>
+  <div class="modal fade" id="addKH"  tabindex="-1">
+    <div class="modal-dialog modal-xl"ng-show="true">
+      <div class="modal-content" >
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <h3>Thêm Khách Hàng</h3>
+          </div>
+        
+          <form class="form-control">
+        
+            <div class="row">
+        
+              <div class="col-md-3 add">
+                <div>Ảnh Khách Hàng <span class="vaid">*</span></div>
+                <img id="output" />
+                <input file-model="image" id="fileUpload" type="file" accept="image/*" onchange="loadFile1(event)">
+              </div>
+              <div class="col-md-9">
+        
+                <div class="row">
+                  <div class="col-md-6 add">
+                    <label>Mã Khách Hàng <span class="vaid">*</span></label> <input class="haninput" ng-model="form.code">
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'code'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 add">
+                    <label>Tên Khách Hàng <span class="vaid">*</span></label> <input class="haninput" ng-model="form.fullname">
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'fullname'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 add">
+                    <label>Tài Khoản<span class="vaid">*</span></label> <input class="haninput" ng-model="form.username">
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'username'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 add">
+                    <label>Mật Khẩu<span class="vaid">*</span></label> <input class="haninput" ng-model="form.password">
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'password'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 add">
+                    <label>Giới Tính<span class="vaid">*</span></label> <input id="gtNam"  name="gioitinh" type="radio"
+                     value="true" checked> Nam <input id="gtNu" name="gioitinh" type="radio" value="false">Nữ
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'gender'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 add">
+                    <label>Số Điện Thoại<span class="vaid">*</span></label> <input class="haninput" ng-model="form.phone">
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'phone'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 add">
+                    <label>Email<span class="vaid">*</span></label> <input class="haninput" ng-model="form.email">
+                    <div ng-repeat="err in validationErrors">
+                      <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'email'">
+                        {{err.defaultMessage}}
+                      </span>
+                    </div>
+                  </div>
+        
+                  <div style="padding-top: 30px;">
+                    <!--                <button style="margin-right: 10px"  class="btn btn-info" ng-click="reset()"><i class="fa-solid fa-rotate-right"></i> Reset</button>-->
+                    <button class="btn btn-danger" ng-click="add()"><i class="fa-solid fa-plus"></i> Thêm</button>
+                  </div>
+        
+                </div>
+              </div>
+            </div>
+        </div>
+        </form>
+        </div>
+      </div>
+    </div>
   </div>

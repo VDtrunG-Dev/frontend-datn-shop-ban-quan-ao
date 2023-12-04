@@ -318,8 +318,8 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
   // thêm giỏ hàng
   let idPro = null;
   $scope.themvaogio = function (id) {
-
     $http.get("http://localhost:8080/api/productdetail_color_size/getbyid/" + id).then(function (resp) {
+      
       $http.get("http://localhost:8080/api/product/" + resp.data.idProductDetail).then(function (pro) {
 
         if (resp.data.quantity == 0) {
@@ -1593,12 +1593,6 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
             checkCode = {
               code: code
             }
-
-
-
-
-
-
             $scope.checkVoucher = true;
             idVoucher = $scope.listVoucher[i].id;
             Swal.fire("Áp mã thành công !", "", "success");
@@ -1652,23 +1646,9 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                           $scope.giamGia += (Price * (resp.data[i].voucher.discount * 0.01));
                           $scope.voucherGiamGia += (Price * (resp.data[i].voucher.discount * 0.01));
                         }
-
-
-
-
-
-
-
-
                       }
-
-
                     }
-
-
                   }
-
-
                   checkCode = {
                     code: code
                   }
@@ -1760,11 +1740,12 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
 
 
   //check trạng thái thanh toán online khi trả về
-
+  console.log($location.search().vnp_TransactionStatus)
   if ($location.search().vnp_TransactionStatus === "00") {
-
+    console.log("ok")
     $http.put('http://localhost:8080/api/bill/updateStatus1/' + $location.search().vnp_OrderInfo, {
       payStatus: 1,
+      status:3
 
     }).then(function (response) {
 
@@ -2068,7 +2049,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
             //khách hàng đã có
             else {
               //chọn địa chỉ
-              if (document.getElementById('diachichon'.checked === true)) {
+              if (document.getElementById('diachichon').checked === true) {
                 $http.post('http://localhost:8080/api/address', {
                   fullname: tennguoimua,
                   phone: sodienthoai,
@@ -2167,7 +2148,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                 idCustomer: idCustomer,
                 paymentDate: new Date(),
                 delyveryDate: new Date(),
-                status: 3,
+                status: 10,
                 typeStatus: 1
               }).then(function (resp) {
                 let requestParams = {
@@ -2196,6 +2177,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                     params: params,
                     transformResponse: [
                       function (data) {
+                        console.log(data)
                         location.href = data;
                       },
                     ],
@@ -2277,6 +2259,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                 districtName: districtName,
                 wardName: wardName
               }).then(function (adds) {
+                console.log(adds)
                 $http.put('http://localhost:8080/api/bill/updateBillTaiQuay/' + codeBill, {
                   totalPrice: $scope.tongTien,
                   shipPrice: $scope.phiShip,
@@ -2333,7 +2316,8 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
             //khách hàng đã có
             else {
               //chọn địa chỉ
-              if (document.getElementById('diachichon'.checked === true)) {
+              if (document.getElementById('diachichon').checked === true) {
+                console.log("ok")
                 $http.post('http://localhost:8080/api/address', {
                   fullname: tennguoimua,
                   phone: sodienthoai,
@@ -2345,7 +2329,9 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                   districtName: districtName,
                   wardName: wardName
                 }).then(function (adds) {
+                  console.log(adds);
                   $http.put('http://localhost:8080/api/bill/updateBillTaiQuay/' + codeBill, {
+                   
                     totalPrice: $scope.tongTien,
                     shipPrice: $scope.phiShip,
                     totalPriceLast: $scope.giamGia,
@@ -2465,12 +2451,72 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     });
   };
   $scope.$watch('tongTien', function () {
-    console.log($scope.tongTien)
     $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + $scope.tongTien).then(function (resp) {
-      console.log(resp.data);
       $scope.listVoucher = resp.data;
     })
   });
 
+  $scope.showAddKH = false;
+  $scope.add = function () {
 
+    var gender = true;
+    if (document.getElementById("gtNu").checked == true) {
+      gender = false;
+
+    }
+
+    //add image
+    var MainImage = document.getElementById("fileUpload").files;
+    if (MainImage.length == 0) {
+      Swal.fire('Vui lòng thêm ảnh đại diện cho khách hàng !', '', 'error');
+      return;
+    }
+
+    var img = new FormData();
+    img.append("files", MainImage[0]);
+    $http.post("http://localhost:8080/api/upload", img, {
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).then(function (upImage) {
+      $http.post("http://localhost:8080/api/customer", {
+        code: $scope.form.code,
+        fullname: $scope.form.fullname,
+        username: $scope.form.username,
+        password: $scope.form.password,
+        image: upImage.data[0],
+        gender: gender,
+        phone: $scope.form.phone,
+        email: $scope.form.email
+      }).then(function (resp) {
+        if (resp.status === 200) {
+          $http.post("http://localhost:8080/api/cart/addCart", {
+            idCustomer: resp.data.id
+          }).then(function (cart) {
+
+            $("#addKH").modal('hide'); 
+            Swal.fire('Thêm Thành Công! ', '', 'success')
+            $http.get("http://localhost:8080/api/customer").then(function (resp) {
+              $scope.listCustomer = resp.data;
+            })
+
+            setTimeout(() => {
+
+              location.href = "#/sell/view";
+            }, 2000);
+
+
+          })
+
+        }
+      }).catch(function (err) {
+        if (err.status === 400) {
+          $scope.validationErrors = err.data;
+        }
+      })
+    })
+
+
+  }
 }

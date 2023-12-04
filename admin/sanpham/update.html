@@ -1,5 +1,5 @@
 
-        <div> <h3>Sửa Giày</h3></div>
+        <div> <h3>Sửa sản phẩm</h3></div>
         <form class="form-control" data-ng-init="detail()">
           <div class="row">
 
@@ -173,6 +173,24 @@
                     </span>
                   </span>
                   </div>
+                  <div class="mb-1 mt-4">
+                    <label class="form-label">Trạng thái bán hàng:</label>
+                </div>
+                <!-- Radio button "Đang bán" -->
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="0" ng-model="form.status" name="status" id="selling" ng-checked="form.status == 0">
+                    <label class="form-check-label" for="selling">
+                        Đang bán
+                    </label>
+                </div>
+        
+                <!-- Radio button "Tạm ngừng bán" -->
+                <div class="form-check">
+                    <input class="form-check-input"  value="1" type="radio"  ng-model="form.status" name="status" id="paused" ng-checked="form.status == 1">
+                    <label class="form-check-label" for="paused">
+                        Tạm ngừng bán
+                    </label>
+                </div>
                  
                 </div>
               </div>
@@ -269,160 +287,6 @@
   </div>
 </div>
 
-<div class="popup" ng-class="{ 'show': isToe }">
-  <div class="popup-content2">
-    <!-- Nội dung của popup -->
-    <h1>Thêm mũi giày </h1>
-    <div class="row">
-      <div class="col-md-12 ">
-        <label>Tên Mũi Giày <span class="vaid">*</span></label> <input class="haninput" ng-model="toename">
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'toeRequest' && err.field == 'name'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-      <div class="col-md-12 ">
-        <label>Mô Tả </label> <textarea class="haninput1" ng-model="toedescription"></textarea>
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'toeRequest' && err.field == 'description'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-    </div>
- <div style="padding-top: 10px;">
-  <button class="btn btn-primary" ng-click="themMuiGiay()">X</button>
-  <button class="btn btn-dark" ng-click="addMuiGiay()">Thêm</button>
- </div>
-
-   
-  </div>
-</div>
-<div class="popup" ng-class="{ 'show': isSole }">
-  <div class="popup-content2">
-    <!-- Nội dung của popup -->
-    <h1>Thêm đế giày </h1>
-    <div class="row">
-      <div class="col-md-12 ">
-        <label>Tên Đế Giày <span class="vaid">*</span></label> <input class="haninput" ng-model="solename">
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'soleRequest' && err.field == 'name'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-      <div class="col-md-12 ">
-        <label>Mô Tả </label> <textarea class="haninput1" ng-model="soledescription"></textarea>
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'soleRequest' && err.field == 'description'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-    </div>
-   
- <div style="padding-top: 10px;">
-  <button class="btn btn-primary" ng-click="themDeGiay()">X</button>
-  <button class="btn btn-dark" ng-click="addDeGiay()">Thêm</button>
- </div>
-
-   
-  </div>
-</div>
-
-<div class="popup" ng-class="{ 'show': isShoelace }">
-  <div class="popup-content2">
-    <!-- Nội dung của popup -->
-    <h1>Thêm dây giày </h1>
-    <div class="row">
-      <div class="col-md-12 ">
-        <label>Tên Dây Giày <span class="vaid">*</span></label> <input class="haninput" ng-model="shoelacename">
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'shoelaceRequest' && err.field == 'name'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-      <div class="col-md-12 ">
-        <label>Mô Tả </label> <textarea class="haninput1" ng-model="shoelacedescription"></textarea>
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'shoelaceRequest' && err.field == 'description'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-    </div>
- <div style="padding-top: 10px;">
-  <button class="btn btn-primary" ng-click="themDayGiay()">X</button>
-  <button class="btn btn-dark" ng-click="addDayGiay()">Thêm</button>
- </div>
-
-   
-  </div>
-</div>
-<div class="popup" ng-class="{ 'show': isHeelcushion }">
-  <div class="popup-content2">
-    <!-- Nội dung của popup -->
-    <h1>Thêm lót giày </h1>
-    <div class="row">
-      <div class="col-md-12 ">
-        <label>Tên Lót Giày <span class="vaid">*</span></label> <input class="haninput" ng-model="heelcushionname">
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'heelcushionRequest' && err.field == 'name'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-      <div class="col-md-12 ">
-        <label>Mô Tả </label> <textarea class="haninput1" ng-model="heelcushiondescription"></textarea>
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'heelcushionRequest' && err.field == 'description'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-    </div>
- <div style="padding-top: 10px;">
-  <button class="btn btn-primary" ng-click="themLotGiay()">X</button>
-  <button class="btn btn-dark" ng-click="addLotGiay()">Thêm</button>
- </div>
-
-   
-  </div>
-</div>
-<div class="popup" ng-class="{ 'show': isDesign }">
-  <div class="popup-content2">
-    <!-- Nội dung của popup -->
-    <h1>Thêm thiết kế </h1>
-    <div class="row">
-      <div class="col-md-12 ">
-        <label>Tên Thiết Kế <span class="vaid">*</span></label> <input class="haninput" ng-model="designname">
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'designRequest' && err.field == 'name'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-      <div class="col-md-12 ">
-        <label>Mô Tả </label> <textarea class="haninput1" ng-model="designdescription"></textarea>
-        <div ng-repeat="err in validationErrors">
-        <span class="validate" ng-if="err.objectName == 'designRequest' && err.field == 'description'">
-           {{err.defaultMessage}}
-        </span>
-        </div>
-      </div>
-    </div>
-   
-
- <div style="padding-top: 10px;">
-  <button class="btn btn-primary" ng-click="themThietKe()">X</button>
-  <button class="btn btn-dark" ng-click="addThietKe()">Thêm</button>
- </div>
-
-   
-  </div>
-</div>
 <div class="popup" ng-class="{ 'show': isMaterial }">
   <div class="popup-content2">
     <!-- Nội dung của popup -->
@@ -639,45 +503,7 @@
                 <input class="haninput" value="{{th.name}}" readonly>
               </span></span>
           </div>
-          <div class="col-md-6 add">
-            <label>Mũi Giày </label>
-           
-                <span ng-repeat="mg in listToe">
-                  <span ng-if="mg.id == history.idToe">
-                    <input class="haninput" value="{{mg.name}}" readonly>
-                  </span></span>
-          </div>
 
-          <div class="col-md-6 add">
-            <label>Đế Giày </label>
-           
-                <span  ng-repeat="dg in listSole">
-                  <span ng-if="dg.id == history.idSole">
-                    <input class="haninput" value="{{dg.name}}" readonly>
-                  </span></span>
-          </div>
-          <div class="col-md-6 add">
-            <label>Dây Giày </label>
-                <span  ng-repeat="day in listShoelace">
-                  <span ng-if="day.id == history.idShoelace">
-                    <input class="haninput" value="{{day.name}}" readonly>
-                  </span></span>
-          </div>
-          <div class="col-md-6 add">
-            <label>Lót Giày </label>
-                <span  ng-repeat="lot in listHeelcushion">
-                  <span ng-if="lot.id == history.idHeelcushion">
-                    <input class="haninput" value="{{lot.name}}" readonly>
-                  </span></span>
-          </div>
-          <div class="col-md-6 add">
-            <label>Thiết Kế </label>
-          
-                <span  ng-repeat="tk in listDesign">
-                  <span ng-if="tk.id == history.idDesign">
-                    <input class="haninput" value="{{tk.name}}" readonly>
-                  </span></span>
-          </div>
           <div class="col-md-12 add">
             <label>Chất Liệu </label>
             <div>

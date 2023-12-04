@@ -149,7 +149,7 @@
                         <!--End Toolbar-->
                         <div class="grid-products grid--view-items">
                             <div class="row">
-                                <div ng-if="list.length > 0" ng-repeat="sp in pager.items" class="col-6 col-sm-6 col-md-3 col-lg-3 item grid-view-item style2">
+                                <div ng-if="list.length > 0 && sp.status == 0" ng-repeat="sp in pager.items" class="col-6 col-sm-6 col-md-3 col-lg-3 item grid-view-item style2">
                                     <div class="grid-view_image">
                                         <!-- start product image -->
                                         <a href="#/detail/{{sp.id}}" class="grid-view-item__link">
@@ -157,11 +157,11 @@
                                                 <span ng-repeat="image in sp.product.productImages">
                                                     <span ng-if="image.mainImage == true">
                                                         <!-- image -->
-                                                <h3>{{image.url}}</h3>
+                                                <!-- <h3>{{image.url}}</h3> -->
                                                 <img style="height: 300px;" class="grid-view-item__image primary blur-up lazyload"  src="{{image.url}}" alt="Ảnh sản phẩm" title="product">
                                                 <!-- End image -->
                                                     </span>
-                                                    <h3>{{sp.product.productImages[0].url}}</h3>
+                                                    <!-- <h3>{{sp.product.productImages[0].url}}</h3> -->
                                                     <span ng-if="image.mainImage == false">
                                                     <!-- Hover image -->
                                                 <img style="height: 300px;" class="grid-view-item__image hover blur-up lazyload"  src="{{sp.product.productImages[0].url}}" alt="image" title="product">

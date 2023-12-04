@@ -129,7 +129,7 @@
 				</div>
 				<div class="grid-products">
 					<div class="row">
-						<div ng-repeat="sp in pagerProductSold.items" class="col-6 col-sm-6 col-md-3 col-lg-3 item grid-view-item style2">
+						<div ng-repeat="sp in pagerProductSold.items "  class="col-6 col-sm-6 col-md-3 col-lg-3 item grid-view-item style2">
 							<div class="grid-view_image">
 								<!-- start product image -->
 								<a href="#/detail/{{sp.id}}" class="grid-view-item__link">
@@ -138,13 +138,13 @@
 										<span ng-repeat="image in sp.product.productImages">
 											<span ng-if="image.mainImage == true">
 												<!-- image -->
-										<h3>{{image.url}}</h3>
+										<!-- <h3>{{image.url}}</h3> -->
 										<img style="height: 300px;" class="grid-view-item__image primary blur-up lazyload"  src="{{image.url}}" alt="Ảnh sản phẩm" title="product">
 										<!-- End image -->
 											</span>
 											<span ng-if="image.mainImage == false">
 											<!-- Hover image -->
-											<h3>{{sp.product.productImages[0].url}}</h3>
+											<!-- <h3>{{sp.product.productImages[0].url}}</h3> -->
 										<img style="height: 300px;" class="grid-view-item__image hover blur-up lazyload"  src="{{sp.product.productImages[0].url}}" alt="image" title="product">
 										<!-- End hover image -->
 											</span>
@@ -247,7 +247,7 @@
 			</div>
 			<div class="grid-products">
 				<div class="row">
-					<div ng-repeat="sp in pagerProductNew.items" class="col-6 col-sm-6 col-md-3 col-lg-3 item grid-view-item style2">
+					<div ng-repeat="sp in pagerProductNew.items " ng-if="list.length > 0 && sp.status == 0" class="col-6 col-sm-6 col-md-3 col-lg-3 item grid-view-item style2">
 						<div class="grid-view_image">
 							<!-- start product image -->
 							<a href="#/detail/{{sp.id}}" class="grid-view-item__link">
