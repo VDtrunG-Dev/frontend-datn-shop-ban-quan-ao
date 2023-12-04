@@ -364,6 +364,11 @@ $scope.deleteImage = function(index) {
     
         //thêm sản phẩm vào giỏ hàng
         $scope.addToCart = function () {
+          if($rootScope.user == null){
+            location.href = '#login';
+            return;
+          }
+
           if (selectedVal === "") {
             Swal.fire("Vui lòng chọn màu sắc !!", "", "error");
             return;

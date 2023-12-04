@@ -163,6 +163,7 @@ app.factory('CartService', function() {
       },
 
       addToCart: function(item) {
+       
           cartItems.push(item);
           saveToLocalStorage();
       },

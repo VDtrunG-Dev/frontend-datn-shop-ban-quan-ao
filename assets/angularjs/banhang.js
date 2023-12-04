@@ -1,5 +1,5 @@
 window.BanHangController = function ($scope, $http, $location, $routeParams, $rootScope, AuthService) {
-
+  $scope.tongTien = 0;
   //tạo hóa đơn
   $scope.addbill = function () {
     // add bill
@@ -318,8 +318,8 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
   // thêm giỏ hàng
   let idPro = null;
   $scope.themvaogio = function (id) {
+
     $http.get("http://localhost:8080/api/productdetail_color_size/getbyid/" + id).then(function (resp) {
-      
       $http.get("http://localhost:8080/api/product/" + resp.data.idProductDetail).then(function (pro) {
 
         if (resp.data.quantity == 0) {
@@ -1593,6 +1593,12 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
             checkCode = {
               code: code
             }
+
+
+
+
+
+
             $scope.checkVoucher = true;
             idVoucher = $scope.listVoucher[i].id;
             Swal.fire("Áp mã thành công !", "", "success");
@@ -1646,9 +1652,23 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                           $scope.giamGia += (Price * (resp.data[i].voucher.discount * 0.01));
                           $scope.voucherGiamGia += (Price * (resp.data[i].voucher.discount * 0.01));
                         }
+
+
+
+
+
+
+
+
                       }
+
+
                     }
+
+
                   }
+
+
                   checkCode = {
                     code: code
                   }
@@ -1742,76 +1762,88 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
   //check trạng thái thanh toán online khi trả về
   console.log($location.search().vnp_TransactionStatus)
   if ($location.search().vnp_TransactionStatus === "00") {
-    console.log("ok")
-    $http.put('http://localhost:8080/api/bill/updateStatus1/' + $location.search().vnp_OrderInfo, {
-      payStatus: 1,
-      status:3
+    $scope.checkTypeStatus;
+    $scope.statusNew;
 
-    }).then(function (response) {
-
-
-      Swal.fire('Thanh toán thành công', '', 'success');
-      let urlcolor = "http://localhost:8080/api/color";
-      let urlsize = "http://localhost:8080/api/size";
-      // load color
-      $scope.listColor = [];
-      $http.get(urlcolor).then(function (response) {
-        $scope.listColor = response.data;
-      });
-      // load size
-      $scope.listSize = [];
-      $http.get(urlsize).then(function (response) {
-        $scope.listSize = response.data;
-      });
-
-      $scope.billexport = {};
-      $scope.addressexport = {};
-      $scope.listItemExport = [];
-      $http.get('http://localhost:8080/api/bill/getbycode/' + $location.search().vnp_OrderInfo).then(function (billexport) {
-        $scope.billexport = billexport.data;
+    $http.get('http://localhost:8080/api/bill/getbill/' + $location.search().vnp_OrderInfo)
+      .then(function (response) {
+        $scope.checkTypeStatus = (response.data.typeStatus)
+        if ($scope.checkTypeStatus == 1) {
+          $scope.statusNew = 3;
+        } else {
+          $scope.statusNew = 1;
+        }
+        console.log('status', $scope.statusNew)
 
 
-        $http.get('http://localhost:8080/api/address/get/' + billexport.data.idAddress).then(function (add) {
-          $scope.addressexport = add.data;
+        $http.put('http://localhost:8080/api/bill/updateStatus1/' + $location.search().vnp_OrderInfo, {
+          payStatus: 1,
+          status: $scope.statusNew
+        }).then(function (response) {
 
+
+          Swal.fire('Thanh toán thành công', '', 'success');
+          let urlcolor = "http://localhost:8080/api/color";
+          let urlsize = "http://localhost:8080/api/size";
+          // load color
+          $scope.listColor = [];
+          $http.get(urlcolor).then(function (response) {
+            $scope.listColor = response.data;
+          });
+          // load size
+          $scope.listSize = [];
+          $http.get(urlsize).then(function (response) {
+            $scope.listSize = response.data;
+          });
+
+          $scope.billexport = {};
+          $scope.addressexport = {};
+          $scope.listItemExport = [];
+          $http.get('http://localhost:8080/api/bill/getbycode/' + $location.search().vnp_OrderInfo).then(function (billexport) {
+            $scope.billexport = billexport.data;
+
+
+            $http.get('http://localhost:8080/api/address/get/' + billexport.data.idAddress).then(function (add) {
+              $scope.addressexport = add.data;
+
+
+            })
+
+          })
+          $http.get("http://localhost:8080/api/bill/getallbybill/" + $location.search().vnp_OrderInfo).then(function (resp) {
+            $scope.listItemExport = resp.data;
+          })
+
+          setTimeout(() => {
+
+
+            Swal.fire({
+              title: 'Bạn có muốn in hóa đơn cho đơn hàng ' + $location.search().vnp_OrderInfo + ' ?',
+              showCancelButton: true,
+              confirmButtonText: 'In',
+            }).then((result) => {
+
+              if (result.isConfirmed) {
+
+                var element = document.getElementById('exportbill');
+
+
+
+                //custom file name
+                html2pdf().set({ filename: $location.search().vnp_OrderInfo + '.pdf' }).from(element).save();
+                Swal.fire('Đã xuất hóa đơn', '', 'success');
+                setTimeout(() => {
+                  location.href = '#/sell/view'
+                }, 2000);
+              }
+              else {
+                location.href = '#/sell/view'
+              }
+            })
+          }, 2000);
 
         })
-
-      })
-      $http.get("http://localhost:8080/api/bill/getallbybill/" + $location.search().vnp_OrderInfo).then(function (resp) {
-        $scope.listItemExport = resp.data;
-      })
-
-      setTimeout(() => {
-
-
-        Swal.fire({
-          title: 'Bạn có muốn in hóa đơn cho đơn hàng ' + $location.search().vnp_OrderInfo + ' ?',
-          showCancelButton: true,
-          confirmButtonText: 'In',
-        }).then((result) => {
-
-          if (result.isConfirmed) {
-
-            var element = document.getElementById('exportbill');
-
-
-
-            //custom file name
-            html2pdf().set({ filename: $location.search().vnp_OrderInfo + '.pdf' }).from(element).save();
-            Swal.fire('Đã xuất hóa đơn', '', 'success');
-            setTimeout(() => {
-              location.href = '#/sell/view'
-            }, 2000);
-          }
-          else {
-            location.href = '#/sell/view'
-          }
-        })
-      }, 2000);
-
-    })
-
+      });
   }
   if ($location.search().vnp_TransactionStatus === "02") {
     $http.delete("http://localhost:8080/api/billhistory/deletebillhistory/" + $location.search().vnp_OrderInfo);
@@ -2204,7 +2236,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                 idCustomer: idCustomer,
                 paymentDate: new Date(),
                 delyveryDate: new Date(),
-                status: 3,
+                status: 10,
                 typeStatus: 1
               }).then(function (resp) {
                 let requestParams = {
@@ -2266,12 +2298,12 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                   totalPriceLast: $scope.giamGia,
                   note: ghichu,
                   idCustomer: idCustomer,
-                  payType: 0,
+                  payType: 1,
                   payStatus: 0,
                   idAddress: adds.data.id,
                   idVoucher: idVoucher == null ? 0 : idVoucher,
                   idCoupon: idCoupon,
-                  status: 1,
+                  status: 10,
                   typeStatus: 0
                 }).then(function (resp) {
                   let requestParams = {
@@ -2331,18 +2363,18 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                 }).then(function (adds) {
                   console.log(adds);
                   $http.put('http://localhost:8080/api/bill/updateBillTaiQuay/' + codeBill, {
-                   
+
                     totalPrice: $scope.tongTien,
                     shipPrice: $scope.phiShip,
                     totalPriceLast: $scope.giamGia,
                     note: ghichu,
                     idCustomer: idCustomer,
-                    payType: 0,
+                    payType: 1,
                     payStatus: 0,
                     idAddress: adds.data.id,
                     idVoucher: idVoucher == null ? 0 : idVoucher,
                     idCoupon: idCoupon,
-                    status: 1,
+                    status: 10,
                     typeStatus: 0
                   }).then(function (resp) {
                     let requestParams = {
@@ -2398,7 +2430,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                   idAddress: idAddressCoSan,
                   idVoucher: idVoucher == null ? 0 : idVoucher,
                   idCoupon: idCoupon,
-                  status: 1,
+                  status: 10,
                   typeStatus: 0
                 }).then(function (resp) {
                   let requestParams = {
@@ -2451,7 +2483,9 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     });
   };
   $scope.$watch('tongTien', function () {
-    $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + $scope.tongTien).then(function (resp) {
+    console.log($scope.tongTien)
+    $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + $scope.tongTien ? $scope.tongTien : 0).then(function (resp) {
+      console.log(resp.data);
       $scope.listVoucher = resp.data;
     })
   });
@@ -2468,7 +2502,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     //add image
     var MainImage = document.getElementById("fileUpload").files;
     if (MainImage.length == 0) {
-      Swal.fire('Vui lòng thêm ảnh đại diện cho khách hàng !', '', 'error');
+      Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
       return;
     }
 
@@ -2495,7 +2529,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
             idCustomer: resp.data.id
           }).then(function (cart) {
 
-            $("#addKH").modal('hide'); 
+            $("#addKH").modal('hide');
             Swal.fire('Thêm Thành Công! ', '', 'success')
             $http.get("http://localhost:8080/api/customer").then(function (resp) {
               $scope.listCustomer = resp.data;

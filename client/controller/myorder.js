@@ -75,7 +75,7 @@ $http.get(urlsize).then(function (response) {
     //     this.page = this.count - 1;
     //   },
     // };
-          
+        
    
 
   };
