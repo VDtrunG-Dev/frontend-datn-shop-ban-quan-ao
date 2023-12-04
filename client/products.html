@@ -100,7 +100,7 @@
                         </div>
                         <!--End Brand-->
                           <!--Brand-->
-                        <div class="sidebar_widget filterBox filter-widget">
+                          <div class="sidebar_widget filterBox filter-widget">
                             <div class="widget-title"><h2>Chất Liệu</h2></div>
                             <select id="chatlieu" class="form-select-sm" ng-click="filter()">
                                 <option value="">Tất cả chất liệu</option>
@@ -108,6 +108,11 @@
                                   {{th.name}}</option></select>
                         </div>
                         <!--End Brand-->
+                       
+                      
+                      
+                        
+                       
                     </div>
                 </div>
                 <!--End Sidebar-->
@@ -119,6 +124,8 @@
                     	<div class="toolbar">
                         	<div class="filters-toolbar-wrapper">
                             	<div class="row">
+                
+                                   
                                     <div class="col-4 col-md-4 col-lg-4">
                                     	<div class="filters-toolbar__item">
                                       		<label for="SortBy" class="hidden">Sắp xếp theo</label>
@@ -130,6 +137,7 @@
                                                 <option value="sort4">Giá giảm dần</option>
                                                 <!-- <option value="sort5">Ngày từ cũ đế</option>
                                                 <option value="sort6">Giá giảm dần</option> -->
+                                               
                                       		</select>
                                       		<input class="collection-header__default-sort" type="hidden" value="manual">
                                         </div>
@@ -163,19 +171,28 @@
                                             </span>
                                             <span ng-if="sp.product.productImages.length == 1">
                                                 <span ng-repeat="image in sp.product.productImages">
+
+                                                   
                                                         <!-- image -->
                                                 <img style="height: 300px;" class="grid-view-item__image primary blur-up lazyload"  src="{{image.url}}" alt="Ảnh sản phẩm" title="product">
                                                 <!-- End image -->
+                                                    
+                                                    
                                                     <!-- Hover image -->
                                                 <img style="height: 300px;" class="grid-view-item__image hover blur-up lazyload"  src="{{image.url}}" alt="image" title="product">
                                                 <!-- End hover image -->
+                                                   
                                                 </span>
                                             </span>
+                                           
+                                            
+                                            
                                            	<!-- product label -->
 								<div class="product-labels rectangular">
 									<span ng-if="sp.discount > 0">
 										<span class="lbl on-sale">-{{sp.discount}}%</span>
 									</span>
+									
 										 <!-- <span class="lbl pr-label1">new</span> -->
 										</div>
 									<!-- End product label -->
@@ -183,13 +200,17 @@
                                         <!-- end product image -->
                                         <!--start product details -->
                                         <div class="product-details hoverDetails text-center mobile">
+                                        
+                                            
                                             <!-- product button -->
                                             <div class="button-set">
+                                                
                                                 <div class="btn">
                                                     <a href="#detail/{{sp.id}}">
                                                         Xem chi tiết
                                                     </a>
                                                 </div>
+                                                
                                             </div>
                                             <!-- end product button -->
                                         </div>
@@ -203,10 +224,13 @@
                                                     <span class="old-price">{{sp.price | currency:'':0}} VNĐ</span>
                                                     <span class="price">{{sp.price - (sp.price * (sp.discount * 0.01)) | currency:'':0}} VNĐ</span>
                                                 </span>
+            
+                                                
                                                 <span ng-if="sp.discount == 0">
             
                                                     <span class="price">{{sp.price | currency:'':0}} VNĐ</span>
                                                 </span>
+                                                
                                             </div>
                                             <!-- <div class="product-review">
                                                 <i class="font-13 fa fa-star"></i>
@@ -219,11 +243,14 @@
                                         <!-- Variant -->
                                         <!-- <ul class="swatches text-center" ng-repeat="img in sp.product.productImages">
                                             <li class="swatch medium rounded"><img style="height: 50px;" src="{{img.url}}" alt="image" /></li>
+                
                                         </ul> -->
                                         <!-- End Variant -->
                                         <!-- End product details -->
+                                        
                                     </div>
                         </div>
+                       
                     </div>
                     <div ng-if="list.length == 0">
                         <center>
