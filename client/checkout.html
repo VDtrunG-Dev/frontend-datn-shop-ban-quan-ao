@@ -148,7 +148,10 @@
                                     </label>
                     
                                    <select id="idAddress" ng-click="changeAddress()" >
-                                    <option ng-repeat="add in listAddress" value="{{add.id}}">{{add.fullname}} - {{add.phone}} | {{add.address}}, {{add.wardName}}, {{add.districtName}}, {{add.cityName}}</option>
+                                    <option ng-repeat="add in listAddress" value="{{add.id}}">{{add.fullname}} - {{add.phone}} | {{add.address}}, {{add.wardName}}, {{add.districtName}}, {{add.cityName}} 
+                                        
+                                    </option>
+                                    <button ng-click="" style="color: rgb(247, 3, 3);"><i class="fa-solid fa-trash-can"></i></button>
                                    </select>
                                    <button ng-click="themDiaChi()" style="float: right;"><i class="fa-solid fa-plus"></i> Thêm địa chỉ mới</button>
                                 </div>

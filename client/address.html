@@ -1,0 +1,116 @@
+<div id="page-content" style="padding-top: 120px;">
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper">
+                <h1 class="page-width">Danh Sách Địa Chỉ</h1>
+            </div>
+        </div>
+    </div>
+
+    <div style="float: right; margin-right: 100px; padding-bottom: 10px;">
+        <button ng-click="themDiaChi()" class="btn btn-success" style="background-color: #13DEB9; border-radius: 5px;">
+            <i class="fa-solid fa-plus"></i> Thêm
+        </button>
+    </div>
+    <table class="table" style="margin-top: 10px; border: 1px">
+        <thead class="cart__row cart__header">
+            <tr>
+                <td colspan="2" class="text-center">
+                    <h3>#</h3>
+                </td>
+                <td colspan="7" class="text-center">
+                    <h3>Địa Chỉ</h3>
+                </td>
+                <td colspan="2" class="text-center">
+                    <h3>Hành Động</h3>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="add in listAddress">
+                <td colspan="2" class="text-center">
+                    <h3>{{$index + 1}}</h3>
+                </td>
+                <td colspan="8" class="text-center">
+                    <h3>{{add.fullname}} - {{add.phone}} | {{add.address}}, {{add.wardName}}, {{add.districtName}},
+                        {{add.cityName}} </h3>
+                </td>
+                <td colspan="2" class="text-center" ng-if="add.status == 4">
+                    <h3>Đã hủy</h3>
+                </td>
+                <td style="text-align: center;">
+                    <button ng-click="detailAddress(add.id)" class="btn btn-dark">
+                        <i class="fa-solid fa-circle-info"></i> Xem chi tiết
+                    </button>
+                    <button class="btn btn-dark" ng-click="deleteAddress(add.id)">
+                        <i class="fa-solid fa-ban"></i> Xoá
+                    </button>
+                </td>
+            </tr>
+
+           
+
+
+        </tbody>
+
+    </table>
+
+
+    <!-- danh mục -->
+    <div class="popup" ng-class="{ 'show': isDiaChi }">
+        <div class="popup-content2">
+            <!-- Nội dung của popup -->
+            <h1>Thêm địa chỉ </h1>
+            <div class="row">
+                <div class="col-md-12 ">
+                    <label>Tên người nhận <span class="vaid">*</span></label> 
+                    <input class="haninput" id="tennguoimua" ng-model="addressNew.fullname">
+                    <span style="color: red;">{{ errorName }}</span>
+                </div>
+                <div class="col-md-12 ">
+                    <label>SĐT người nhận <span class="vaid">*</span></label> 
+                    <input class="haninput" id="sodienthoai" ng-model="addressNew.phone">
+                    <span style="color: red;">{{ errorPhone }}</span>
+                </div>
+                <div class="col-md-12 ">
+                    <label>Tỉnh/Thành <span class="vaid">*</span></label> 
+                    <select class="form-control" id="tinh"
+                        ng-click="getHuyen();getXa()">
+                        <option ng-if="addressNew.cityId !== undefined" value="{{addressNew.cityId}}">{{addressNew.cityName}}</option>
+                        <option ng-repeat="tinh in listTinh" value="{{tinh.ProvinceID}}">{{tinh.ProvinceName}}</option>
+                    </select>
+
+                </div>
+               
+                <div class="col-md-12 ">
+                    <label>Quận/Huyện <span class="vaid">*</span></label> 
+                    <select class="form-control" id="huyen"
+                        ng-click="getXa()">
+                        <option ng-if="addressNew.districtName !== undefined" value="{{addressNew.districtId}}">{{addressNew.districtName}}</option>
+                        <option ng-repeat="huyen in listHuyen" value="{{huyen.DistrictID}}">{{huyen.DistrictName}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-12 ">
+                    <label>Phường/Xã <span class="vaid">*</span></label> 
+                    <select class="form-control" id="xa">
+                        <option ng-if="addressNew.wardName !== undefined" value="{{addressNew.wardId}}">{{addressNew.wardName}}</option>
+                        <option ng-repeat="xa in listXa" value="{{xa.WardCode}}">{{xa.WardName}}</option>
+                    </select>
+                </div>
+                
+
+                <div class="col-md-12 ">
+                    <label>Địa chỉ cụ thể </label> 
+                    <textarea class="haninput1" id="diachicuthe" ng-model="addressNew.address"></textarea>
+                    <span style="color: red;">{{ errorDetailAddress }}</span>
+                </div>
+                <div style="padding-top: 10px;">
+                    <button class="btn btn-primary" ng-click="themDiaChi()">X</button>
+                    <button class="btn btn-dark" ng-click="addDiaChi()">{{ isSubmitAdd ? 'Thêm' : 'Chỉnh Sửa' }}</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

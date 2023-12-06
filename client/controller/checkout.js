@@ -1,4 +1,11 @@
 window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $location, AuthService, CartService) {
+  $scope.limitCharacters = function(text, limit) {
+    if (text.length > limit) {
+        return text.substring(0, limit) + '...';
+    }
+    return text;
+};
+  
   //trang thanh toán
 
   $scope.checkOut = function () {

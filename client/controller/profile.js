@@ -1,102 +1,338 @@
-window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
-   $scope.profile = function(){
+window.ProfileController = function ($http, $scope, $rootScope, AuthService) {
+
+  let IdCustomer = AuthService.getCustomer();
+  $scope.listAddress = [];
+
+  $http.get("http://localhost:8080/api/address/" + IdCustomer)
+    .then(function (response) {
+      $scope.listAddress = response.data;
+    })
+
+  $scope.reloadData = function (IdCustomer) {
+    $http.get("http://localhost:8080/api/address/" + IdCustomer)
+      .then(function (response) {
+        $scope.listAddress = response.data;
+        console.log(response.data)
+      })
+      .catch(function (error) {
+        console.error("Error loading data:", error);
+      });
+  };
+
+  $scope.deleteAddress = function (id) {
+    Swal.fire({
+      title: "Xác Nhận Xoá?",
+      showCancelButton: true,
+      confirmButtonText: "Xoá",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $http.delete("http://localhost:8080/api/address/delete/" + id)
+          .then(function (response) {
+            Swal.fire('Xoá thành công !', '', 'success');
+            $scope.reloadData(IdCustomer);
+            
+          })
+          .catch(function (error) {
+            console.error("Error deleting address:", error);
+          });
+      } else {
+        console.log("Người dùng đã hủy");
+      }
+    });
+  };
+
+  $scope.isDiaChi = false;
+  $scope.isSubmitAdd = false;
+  $scope.themDiaChi = function () {
+    $scope.isDiaChi = !$scope.isDiaChi;
+    $scope.isSubmitAdd = true;
+    $scope.idAddress = " "
+    //get tỉnh
+    $scope.listTinh = [];
+    $http({
+      method: "GET",
+      url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
+      headers: {
+        'token': 'f22a8bb9-632c-11ee-b394-8ac29577e80e'
+      }
+    }).then(function (resp) {
+      $scope.listTinh = resp.data.data;
+
+    })
+    $scope.getHuyen = function () {
+      let tinh = document.getElementById("tinh").value
+      if (tinh === '') {
+        tinh = 269;
+      }
+      $scope.listHuyen = [];
+      $http({
+        method: "GET",
+        url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + tinh,
+        headers: {
+          'token': 'f22a8bb9-632c-11ee-b394-8ac29577e80e'
+        }
+      }).then(function (resp) {
+        $scope.listHuyen = resp.data.data;
+
+      })
+    }
+    $scope.getXa = function () {
+      let huyen = document.getElementById("huyen").value
+      if (huyen === '') {
+        huyen = 2264;
+      }
+      $scope.listXa = [];
+      $http({
+        method: "GET",
+        url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + huyen,
+        headers: {
+          'token': 'f22a8bb9-632c-11ee-b394-8ac29577e80e'
+        }
+      }).then(function (resp) {
+        $scope.listXa = resp.data.data;
+
+      })
+    }
+
+
+    $scope.getHuyen();
+    $scope.getXa();
+  }
+
+
+  $scope.idAddress = " "
+  $scope.addDiaChi = function () {
+    let tennguoimua = document.getElementById('tennguoimua').value;
+    let sodienthoai = document.getElementById('sodienthoai').value;
+    let diachicuthe = document.getElementById('diachicuthe').value;
+    let cityId = document.getElementById('tinh').value;
+    let districtId = document.getElementById('huyen').value;
+    let wardId = document.getElementById('xa').value;
+    // Get the select element by its id
+    const selectElement = document.getElementById('tinh');
+
+    // Get the selected option's text content (ProvinceName)
+    const cityName = selectElement.options[selectElement.selectedIndex].textContent;
+    // Get the select element by its id
+    const selectElement1 = document.getElementById('huyen');
+
+    // Get the selected option's text content (ProvinceName)
+    const districtName = selectElement1.options[selectElement1.selectedIndex].textContent;
+    // Get the select element by its id
+    const selectElement2 = document.getElementById('xa');
+
+    // Get the selected option's text content (ProvinceName)
+    const wardName = selectElement2.options[selectElement2.selectedIndex].textContent;
+
+    if (tennguoimua.trim() === '') {
+      $scope.errorName = "Chưa nhập tên người mua";
+      return;
+    } else {
+      $scope.errorName = "";
+    }
+
+    if (sodienthoai.trim() === '') {
+      $scope.errorPhone = "Chưa nhập số điện thoại";
+      return;
+    } else {
+      $scope.errorPhone = "";
+    }
+
+    if (diachicuthe.trim() === '') {
+      $scope.errorDetailAddress = "Chưa nhập Địa chỉ cụ thể";
+      return;
+    } else {
+      $scope.errorDetailAddress = "";
+    }
+    $http.post('http://localhost:8080/api/address/add', {
+      id: $scope.idAddress,
+      fullname: tennguoimua,
+      phone: sodienthoai,
+      address: diachicuthe,
+      cityId: cityId,
+      districtId: districtId,
+      wardId: wardId,
+      cityName: cityName,
+      districtName: districtName,
+      wardName: wardName,
+      idCustomer: IdCustomer
+    }).then(function (resp) {
+      $scope.isDiaChi = false;
+     
+      if($scope.idAddress !== ''){
+        Swal.fire('Sửa thành công !', '', 'success');
+      }else{
+        Swal.fire('Thêm thành công !', '', 'success');
+      }
+      $http.get("http://localhost:8080/api/address/" + IdCustomer).then(function (address) {
+        $scope.listAddress = address.data;
+      })
+    })
+  }
+
+  // start detail address
+  $scope.detailAddress = function (id) {
+    $scope.isDiaChi = !$scope.isDiaChi;
+    $scope.isSubmitAdd = false;
+    $scope.idAddress = id;
+    $http.get("http://localhost:8080/api/address/get/" + id)
+      .then(function (response) {
+        $scope.addressNew = response.data;  
+        $scope.listTinh = [];
+        $http({
+          method: "GET",
+          url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/province",
+          headers: {
+            'token': 'f22a8bb9-632c-11ee-b394-8ac29577e80e'
+          }
+        }).then(function (resp) {
+          $scope.listTinh = resp.data.data;
+          $scope.selectedTinh = $scope.listTinh.find(tinh => tinh.ProvinceName === $scope.addressNew.cityName);
+        })
+
+        $scope.getHuyen = function () {
+          let tinh = document.getElementById("tinh").value
+          if(tinh === ''){
+            tinh = $scope.addressNew.cityId;
+          }
+            
+          $scope.listHuyen = [];
+          $http({
+            method: "GET",
+            url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + tinh,
+            headers: {
+              'token': 'f22a8bb9-632c-11ee-b394-8ac29577e80e'
+            }
+          }).then(function (resp) {
+            $scope.listHuyen = resp.data.data;
+            $scope.selectedHuyen = $scope.listHuyen.find(huyen => huyen.DistrictName === $scope.addressNew.districtName);
+          })
+        }
+        $scope.getXa = function () {
+          let huyen = document.getElementById("huyen").value
+          if(huyen === ''){
+            huyen = $scope.addressNew.districtId;
+          }
+            
+          
+          $scope.listXa = [];
+          $http({
+            method: "GET",
+            url: "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + huyen,
+            headers: {
+              'token': 'f22a8bb9-632c-11ee-b394-8ac29577e80e'
+            }
+          }).then(function (resp) {
+            $scope.listXa = resp.data.data;
+            $scope.selectedXa = $scope.listXa.find(xa => xa.WardName === $scope.addressNew.wardName);
+          })
+        }
+        
+        $scope.getHuyen();
+        $scope.getXa();
+      });
+  };
+  // end update addres
+
+  $scope.profile = function () {
     let IdCustomer = AuthService.getCustomer();
 
     $scope.profile = {
-        fullname : '',
-        phone : '',
-        email : '',
-        iamge : ''
+      fullname: '',
+      phone: '',
+      email: '',
+      iamge: ''
     };
-    $http.get("http://localhost:8080/api/customer/"+IdCustomer).then(function(resp){
-        $scope.profile = resp.data;
-        $scope.anh = resp.data.image;
-        if(resp.data.gender == true ){
-            document.getElementById("gtNam").checked = true ;
-        }else{
-            document.getElementById("gtNu").checked = true ;
+    $http.get("http://localhost:8080/api/customer/" + IdCustomer).then(function (resp) {
+      $scope.profile = resp.data;
+      $scope.anh = resp.data.image;
+      if (resp.data.gender == true) {
+        document.getElementById("gtNam").checked = true;
+      } else {
+        document.getElementById("gtNu").checked = true;
 
-        }
+      }
     })
 
-    $scope.update = function(){
+    $scope.update = function () {
 
-        var gender = true ;
-        if(document.getElementById("gtNu").checked == true){
-            gender = false ; 
+      var gender = true;
+      if (document.getElementById("gtNu").checked == true) {
+        gender = false;
 
-        }
-        
-          // update image
-          var MainImage = document.getElementById("fileUpload").files;
-          if (MainImage.length > 0) {
-              var img = new FormData();
-              img.append("files", MainImage[0]);
-              $http.post("http://localhost:8080/api/upload", img, {
-                  transformRequest: angular.identity,
-                  headers: {
-                      'Content-Type': undefined
-                  }
-              }).then(function (image) {
-                $http.put("http://localhost:8080/api/customer/updateprofile/" + IdCustomer, {
-                    fullname: $scope.profile.fullname,
-                    image: image.data[0],
-                    gender: gender,
-                    phone: $scope.profile.phone,
-                    email: $scope.profile.email
-                }).then(function (resp) {
-                    if (resp.status === 200) {
-                        Swal.fire('Cập nhật thành công !', '', 'success')
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                    }
-                }).catch(function (err) {
-                    if (err.status === 400) {
-                        $scope.validationErrors = err.data;
-                    }
-        
-                })
-              })
+      }
+
+      // update image
+      var MainImage = document.getElementById("fileUpload").files;
+      if (MainImage.length > 0) {
+        var img = new FormData();
+        img.append("files", MainImage[0]);
+        $http.post("http://localhost:8080/api/upload", img, {
+          transformRequest: angular.identity,
+          headers: {
+            'Content-Type': undefined
           }
-          else{
-            $http.put("http://localhost:8080/api/customer/updateprofile/" + IdCustomer, {
-                fullname: $scope.profile.fullname,
-                image: $scope.profile.image,
-                gender: gender,
-                phone: $scope.profile.phone,
-                email: $scope.profile.email
-            }).then(function (resp) {
-                if (resp.status === 200) {
-                    Swal.fire('Cập nhật thành công !', '', 'success')
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                }
-            }).catch(function (err) {
-                if (err.status === 400) {
-                    $scope.validationErrors = err.data;
-                }
-    
-            })
+        }).then(function (image) {
+          $http.put("http://localhost:8080/api/customer/updateprofile/" + IdCustomer, {
+            fullname: $scope.profile.fullname,
+            image: image.data[0],
+            gender: gender,
+            phone: $scope.profile.phone,
+            email: $scope.profile.email
+          }).then(function (resp) {
+            if (resp.status === 200) {
+              Swal.fire('Cập nhật thành công !', '', 'success')
+              setTimeout(() => {
+                location.reload();
+              }, 1000);
+            }
+          }).catch(function (err) {
+            if (err.status === 400) {
+              $scope.validationErrors = err.data;
+            }
+
+          })
+        })
+      }
+      else {
+        $http.put("http://localhost:8080/api/customer/updateprofile/" + IdCustomer, {
+          fullname: $scope.profile.fullname,
+          image: $scope.profile.image,
+          gender: gender,
+          phone: $scope.profile.phone,
+          email: $scope.profile.email
+        }).then(function (resp) {
+          if (resp.status === 200) {
+            Swal.fire('Cập nhật thành công !', '', 'success')
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           }
-     
+        }).catch(function (err) {
+          if (err.status === 400) {
+            $scope.validationErrors = err.data;
+          }
+
+        })
+      }
+
     }
-    
-
-   }
 
 
-   $scope.profile();
+  }
 
-   
+
+  $scope.profile();
+
+
+
 
 
   /*********************************************************************************
 
-	Template Name: Belle - Multipurpose eCommerce Bootstrap4 HTML Template
-	Description: A perfect template to build beautiful and unique Glasses websites. It comes with nice and clean design.
-	Version: 1.0
+  Template Name: Belle - Multipurpose eCommerce Bootstrap4 HTML Template
+  Description: A perfect template to build beautiful and unique Glasses websites. It comes with nice and clean design.
+  Version: 1.0
 
 **********************************************************************************/
 
@@ -111,16 +347,16 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
   8. Search Trigger
   9. Mobile Menu
   10 Slick Slider
-	 10.1 Homepage Slideshow 
-	 10.2 Product Slider Slick
-	 10.3 Product Slider Slick Style2
-	 10.4 Product Slider Slick Style3
-	 10.5 Product Slider Slick Fullwidth
-	 10.6 Product Slider Slick Product Page
-	 10.7 Collection Slider Slick
-	 10.8 Collection Slider Slick 4 items
-	 10.9 Logo Slider Slick
-	 10.10 Testimonial Slider Slick
+   10.1 Homepage Slideshow 
+   10.2 Product Slider Slick
+   10.3 Product Slider Slick Style2
+   10.4 Product Slider Slick Style3
+   10.5 Product Slider Slick Fullwidth
+   10.6 Product Slider Slick Product Page
+   10.7 Collection Slider Slick
+   10.8 Collection Slider Slick 4 items
+   10.9 Logo Slider Slick
+   10.10 Testimonial Slider Slick
   11. Tabs With Accordian Responsive
   12. Sidebar Categories Level links
   13. Price Range Slider
@@ -146,13 +382,13 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
   33. Infinite Scroll js
 *************************************************/
 
-(function ($) {
+  (function ($) {
     // Start of use strict
     "use strict";
 
     /*-----------------------------------------
-	  1. Preloader Loading ----------------------- 
-	  -----------------------------------------*/
+    1. Preloader Loading ----------------------- 
+    -----------------------------------------*/
     function pre_loader() {
       $("#load").fadeOut();
       $("#pre-loader").delay(0).fadeOut("slow");
@@ -160,8 +396,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     pre_loader();
 
     /*-----------------------------------------
-	 2. Promotional Bar Header ------------------
-	  -----------------------------------------*/
+   2. Promotional Bar Header ------------------
+    -----------------------------------------*/
     function promotional_bar() {
       $(".closeHeader").on("click", function () {
         $(".promotion-header").slideUp();
@@ -172,8 +408,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     promotional_bar();
 
     /*-----------------------------------------
-	 3. Currency Show/Hide dropdown -----------
-	  -----------------------------------------*/
+   3. Currency Show/Hide dropdown -----------
+    -----------------------------------------*/
     function currency_dropdown() {
       $(".selected-currency").on("click", function () {
         $("#currencies").slideToggle();
@@ -185,8 +421,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     currency_dropdown();
 
     /*-----------------------------------------
-	  4. Language Show/Hide dropdown ----------
-	  -----------------------------------------*/
+    4. Language Show/Hide dropdown ----------
+    -----------------------------------------*/
     function language_dropdown() {
       $(".language-dd").on("click", function () {
         $("#language").slideToggle();
@@ -198,8 +434,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     language_dropdown();
 
     /*-----------------------------------------
-	  5. Top Links Show/Hide dropdown ---------
-	  -----------------------------------------*/
+    5. Top Links Show/Hide dropdown ---------
+    -----------------------------------------*/
     function userlink_dropdown() {
       $(".top-header .user-menu").on("click", function () {
         if ($(window).width() < 990) {
@@ -211,8 +447,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     userlink_dropdown();
 
     /*-----------------------------------------
-	  6. Minicart Dropdown ---------------------
-	  ------------------------------------------ */
+    6. Minicart Dropdown ---------------------
+    ------------------------------------------ */
     function minicart_dropdown() {
       $(".site-header__cart").on("click", function (i) {
         i.preventDefault();
@@ -228,8 +464,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     }
     minicart_dropdown();
     /*-----------------------------------------
-	  6. Login Dropdown ---------------------
-	  ------------------------------------------ */
+    6. Login Dropdown ---------------------
+    ------------------------------------------ */
     function login_dropdown() {
       $(".site-header__login").on("click", function (i) {
         i.preventDefault();
@@ -249,8 +485,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     login_dropdown();
 
     /*-----------------------------------------
-	  7. Sticky Header ------------------------
-	  -----------------------------------------*/
+    7. Sticky Header ------------------------
+    -----------------------------------------*/
     window.onscroll = function () {
       myFunction();
     };
@@ -265,8 +501,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     }
 
     /*-----------------------------------------
-	  8. Search Trigger -----------------------
-	  ----------------------------------------- */
+    8. Search Trigger -----------------------
+    ----------------------------------------- */
     function search_bar() {
       $(".search-trigger").on("click", function () {
         const search = $(".search");
@@ -287,8 +523,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-----------------------------------------
-	  9. Mobile Menu --------------------------
-	  -----------------------------------------*/
+    9. Mobile Menu --------------------------
+    -----------------------------------------*/
     var selectors = {
       body: "body",
       sitenav: "#siteNav",
@@ -336,8 +572,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-----------------------------------------
-	  10.1 Homepage Slideshow -----------------
-	  -----------------------------------------*/
+    10.1 Homepage Slideshow -----------------
+    -----------------------------------------*/
     function home_slider() {
       $(".home-slideshow").slick({
         dots: false,
@@ -362,8 +598,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
       .resize();
 
     /*-----------------------------------------
-	  10.2 Product Slider Slick ---------------
-	  -----------------------------------------*/
+    10.2 Product Slider Slick ---------------
+    -----------------------------------------*/
     function product_slider() {
       $(".productSlider").slick({
         dots: false,
@@ -399,8 +635,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     product_slider();
 
     /*-----------------------------------------
-	  10.3 Product Slider Slick Style2 --------
-	  -----------------------------------------*/
+    10.3 Product Slider Slick Style2 --------
+    -----------------------------------------*/
     function product_slider1() {
       $(".productSlider-style1").slick({
         dots: false,
@@ -436,8 +672,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     product_slider1();
 
     /*-----------------------------------------
-	  10.4 Product Slider Slick Style3 --------
-	  -----------------------------------------*/
+    10.4 Product Slider Slick Style3 --------
+    -----------------------------------------*/
     function product_slider2() {
       $(".productSlider-style2").slick({
         dots: false,
@@ -473,8 +709,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     product_slider2();
 
     /*-----------------------------------------
-	  10.5 Product Slider Slick Fullwidth -----
-	  ----------------------------------------- */
+    10.5 Product Slider Slick Fullwidth -----
+    ----------------------------------------- */
     function product_slider_full() {
       $(".productSlider-fullwidth").slick({
         dots: false,
@@ -510,8 +746,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     product_slider_full();
 
     /*-----------------------------------------
-	  10.6 Product Slider Slick Product Page --
-	  ----------------------------------------- */
+    10.6 Product Slider Slick Product Page --
+    ----------------------------------------- */
     function product_slider_ppage() {
       $(".productPageSlider").slick({
         dots: false,
@@ -554,8 +790,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     product_slider_ppage();
 
     /*-----------------------------------------
-	  10.7 Collection Slider Slick ------------
-	  ----------------------------------------- */
+    10.7 Collection Slider Slick ------------
+    ----------------------------------------- */
     function collection_slider() {
       $(".collection-grid").slick({
         dots: false,
@@ -591,8 +827,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     collection_slider();
 
     /*-----------------------------------------
-	  10.8 Collection Slider Slick 4 items ----
-	  ----------------------------------------- */
+    10.8 Collection Slider Slick 4 items ----
+    ----------------------------------------- */
     function collection_slider1() {
       $(".collection-grid-4item").slick({
         dots: false,
@@ -628,8 +864,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     collection_slider1();
 
     /*-----------------------------------------
-	  10.9 Logo Slider Slick ------------------
-	  -----------------------------------------*/
+    10.9 Logo Slider Slick ------------------
+    -----------------------------------------*/
     function logo_slider() {
       $(".logo-bar").slick({
         dots: false,
@@ -665,8 +901,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     logo_slider();
 
     /*-----------------------------------------
-	  10.10 Testimonial Slider Slick ----------
-	  -----------------------------------------*/
+    10.10 Testimonial Slider Slick ----------
+    -----------------------------------------*/
     function testimonial_slider() {
       $(".quotes-slider").slick({
         dots: false,
@@ -679,8 +915,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     testimonial_slider();
 
     /*-----------------------------------
-	  11. Tabs With Accordian Responsive
-	-------------------------------------*/
+    11. Tabs With Accordian Responsive
+  -------------------------------------*/
     $(".tab_content").hide();
     $(".tab_content:first").show();
 
@@ -716,12 +952,12 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     $("ul.tabs li").last().addClass("tab_last");
 
     /*-----------------------------------
-	  End Tabs With Accordian Responsive
-	-------------------------------------*/
+    End Tabs With Accordian Responsive
+  -------------------------------------*/
 
     /*-----------------------------------
-	  12. Sidebar Categories Level links
-	-------------------------------------*/
+    12. Sidebar Categories Level links
+  -------------------------------------*/
     function categories_level() {
       $(".sidebar_categories .sub-level a").on("click", function () {
         $(this).toggleClass("active");
@@ -736,8 +972,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-----------------------------------
-	 13. Price Range Slider
-	-------------------------------------*/
+   13. Price Range Slider
+  -------------------------------------*/
     function price_slider() {
       $("#slider-range").slider({
         range: true,
@@ -750,16 +986,16 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
       });
       $("#amount").val(
         "$" +
-          $("#slider-range").slider("values", 0) +
-          " - $" +
-          $("#slider-range").slider("values", 1)
+        $("#slider-range").slider("values", 0) +
+        " - $" +
+        $("#slider-range").slider("values", 1)
       );
     }
     price_slider();
 
     /*-----------------------------------
-	 14. Color Swacthes
-	-------------------------------------*/
+   14. Color Swacthes
+  -------------------------------------*/
     function color_swacthes() {
       $.each($(".swacth-list"), function () {
         var n = $(".swacth-btn");
@@ -772,8 +1008,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     color_swacthes();
 
     /*-----------------------------------
-	  15. Footer links for mobiles
-	-------------------------------------*/
+    15. Footer links for mobiles
+  -------------------------------------*/
     function footer_dropdown() {
       $(".footer-links .h4").on("click", function () {
         if ($(window).width() < 766) {
@@ -801,8 +1037,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-------------------------------
-	  16. Site Animation
-	----------------------------------*/
+    16. Site Animation
+  ----------------------------------*/
     if ($(window).width() < 771) {
       $(".wow").removeClass("wow");
     }
@@ -821,8 +1057,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     wow.init();
 
     /*-------------------------------
-	  17. SHOW HIDE PRODUCT TAG
-	----------------------------------*/
+    17. SHOW HIDE PRODUCT TAG
+  ----------------------------------*/
     $(".product-tags li").eq(10).nextAll().hide();
     $(".btnview").on("click", function () {
       $(".product-tags li").not(".filter--active").show();
@@ -830,8 +1066,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-------------------------------
-	  18. SHOW HIDE PRODUCT Filters
-	----------------------------------*/
+    18. SHOW HIDE PRODUCT Filters
+  ----------------------------------*/
     $(".btn-filter").on("click", function () {
       $(".filterbar").toggleClass("active");
     });
@@ -847,8 +1083,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-------------------------------
-	 19. Timer Count Down
-	----------------------------------*/
+   19. Timer Count Down
+  ----------------------------------*/
     $("[data-countdown]").each(function () {
       var $this = $(this),
         finalDate = $(this).data("countdown");
@@ -862,8 +1098,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-------------------------------
-	 20.Scroll Top ------------------
-	---------------------------------*/
+   20.Scroll Top ------------------
+  ---------------------------------*/
     function scroll_top() {
       $("#site-scroll").on("click", function () {
         $("html, body").animate({ scrollTop: 0 }, 1000);
@@ -881,8 +1117,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*-------------------------------
-	  21. Height Product Grid Image
-	----------------------------------*/
+    21. Height Product Grid Image
+  ----------------------------------*/
     function productGridView() {
       var gridRows = [];
       var tempRow = [];
@@ -947,7 +1183,7 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
 
     /*--------------------------
       24. Product Zoom
-	---------------------------- */
+  ---------------------------- */
     function product_zoom() {
       $(".zoompro").elevateZoom({
         gallery: "gallery",
@@ -963,7 +1199,7 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
 
     /*--------------------------
       25. Product Page Popup ---
-	---------------------------- */
+  ---------------------------- */
     function video_popup() {
       if ($(".popup-video").length) {
         $(".popup-video").magnificPopup({
@@ -994,8 +1230,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     inquiry_popup();
 
     /*----------------------------------
-	  26. Quantity Plus Minus
-	------------------------------------*/
+    26. Quantity Plus Minus
+  ------------------------------------*/
     function qnt_incre() {
       $(".qtyBtn").on("click", function () {
         var qtyField = $(this).parent(".qtyField"),
@@ -1013,8 +1249,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     qnt_incre();
 
     /*----------------------------------
-	  27. Visitor Fake Message
-	------------------------------------*/
+    27. Visitor Fake Message
+  ------------------------------------*/
     var userLimit = $(".userViewMsg").attr("data-user"),
       userTime = $(".userViewMsg").attr("data-time");
     $(".uersView").text(Math.floor(Math.random() * userLimit));
@@ -1023,8 +1259,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     }, userTime);
 
     /*----------------------------------
-	  28. Product Tabs
-	------------------------------------*/
+    28. Product Tabs
+  ------------------------------------*/
     $(".tab-content").hide();
     $(".tab-content:first").show();
     /* if in tab mode */
@@ -1072,8 +1308,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     });
 
     /*--------------------------------------
-	  29. Promotion / Notification Cookie Bar 
-	  -------------------------------------- */
+    29. Promotion / Notification Cookie Bar 
+    -------------------------------------- */
     function cookie_promo() {
       if (Cookies.get("promotion") != "true") {
         $(".notification-bar").show();
@@ -1086,12 +1322,12 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     }
     cookie_promo();
     /* --------------------------------------
-	 	End Promotion / Notification Cookie Bar 
-	 -------------------------------------- */
+      End Promotion / Notification Cookie Bar 
+   -------------------------------------- */
 
     /* --------------------------------------
-	 	30. Image to background js
-	 -------------------------------------- */
+      30. Image to background js
+   -------------------------------------- */
     $(".bg-top").parent().addClass("b-top");
     $(".bg-bottom").parent().addClass("b-bottom");
     $(".bg-center").parent().addClass("b-center");
@@ -1115,12 +1351,12 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
       el.hide();
     });
     /* --------------------------------------
-	 	End Image to background js
-	 -------------------------------------- */
+      End Image to background js
+   -------------------------------------- */
 
     /*----------------------------------
-	32. Related Product Slider ---------
-	------------------------------------*/
+  32. Related Product Slider ---------
+  ------------------------------------*/
     function related_slider() {
       $(".related-product .productSlider").slick({
         dots: false,
@@ -1145,12 +1381,12 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     }
     related_slider();
     /*----------------------------------
-	  End Related Product Slider
-	  ------------------------------------*/
+    End Related Product Slider
+    ------------------------------------*/
 
     /*-----------------------------------
-	  33. Infinite Scroll js
-	  -------------------------------------*/
+    33. Infinite Scroll js
+    -------------------------------------*/
     function load_more() {
       $(".product-load-more .item").slice(0, 16).show();
       $(".loadMore").on("click", function (e) {
@@ -1179,8 +1415,8 @@ window.ProfileController = function ($http, $scope, $rootScope,AuthService) {
     }
     load_more_post();
     /*-----------------------------------
-	  End Infinite Scroll js
-	  -------------------------------------*/
+    End Infinite Scroll js
+    -------------------------------------*/
   })(jQuery);
-   
+
 }
