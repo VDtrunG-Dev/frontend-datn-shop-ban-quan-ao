@@ -160,6 +160,10 @@
 <div class="popup" ng-class="{ 'show': isChiTiet }">
     <div class="popup-content">
       <!-- Nội dung của popup -->
+    <div style="padding-top: 10px;" >
+      <h1 style="text-align: center;"><strong>Lịch sử đơn hàng</strong></h1>
+      <button style=" float: right;" class="btn btn-primary" ng-click="chitiet()">Đóng</button>
+    </div>
     <table class="table">
         <tr>
             <td>Trạng thái</td>
@@ -184,9 +188,7 @@
             <td>{{bi.createBy}}</td>
         </tr>
     </table>
-   <div style="padding-top: 10px;">
-    <button class="btn btn-primary" ng-click="chitiet()">X</button>
-   </div>
+   
   
      
   
