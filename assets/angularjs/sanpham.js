@@ -384,8 +384,8 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
 
         var MainImage = document.getElementById("fileUpload").files;
         if (MainImage.length == 0) {
-            Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
-            return;
+            // Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
+            // return;
         }
         $scope.get = function (name) {
             return document.getElementById(name).value;
@@ -486,7 +486,7 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
 
                     var img = new FormData();
                     img.append("files", MainImage[0]);
-                    $http.post("http://localhost:8080/api/upload", img, {
+                    $http.post("http://localhost:8080/api/upload/sanpham", img, {
                         transformRequest: angular.identity,
                         headers: {
                             'Content-Type': undefined
@@ -502,7 +502,7 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
                                 var img1 = new FormData();
                                 for (let i = 0; i < ListImage.length; i++) {
                                     img1.append("files", ListImage[i]);
-                                    $http.post("http://localhost:8080/api/upload", img1, {
+                                    $http.post("http://localhost:8080/api/upload/sanpham", img1, {
                                         transformRequest: angular.identity,
                                         headers: {
                                             'Content-Type': undefined
