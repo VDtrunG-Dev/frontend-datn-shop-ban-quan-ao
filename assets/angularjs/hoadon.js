@@ -318,6 +318,11 @@ window.HoaDonController = function (
           input: "textarea",
           showCancelButton: true,
           confirmButtonText: "Rollback",
+          preConfirm: (value) => {
+            if (!value) {
+              Swal.showValidationMessage("Nhập rõ lý do rollback");
+            }
+          },
         }).then((result) => {
           if (result.isConfirmed) {
             $http
@@ -355,6 +360,7 @@ window.HoaDonController = function (
           return null;
       }
     };
+
     if ($scope.bill.status === 2) {
       if ($scope.bill.payStatus === 0) {
         Swal.fire(
@@ -548,6 +554,11 @@ window.HoaDonController = function (
       input: "textarea",
       showCancelButton: true,
       confirmButtonText: "Xác nhận",
+      preConfirm: (value) => {
+        if (!value) {
+          Swal.showValidationMessage("Nhập rõ lý do tại sao hủy đơn");
+        }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         $http
