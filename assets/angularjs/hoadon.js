@@ -308,58 +308,7 @@ window.HoaDonController = function (
         }
       });
     }
-    $scope.rollback = function (code, id) {
-      var rollbackStatus = $scope.calculateRollbackStatus($scope.bill.status);
-
-      if (rollbackStatus !== null) {
-        Swal.fire({
-          title: "Roll back",
-          inputLabel: "Ghi chú",
-          input: "textarea",
-          showCancelButton: true,
-          confirmButtonText: "Rollback",
-          preConfirm: (value) => {
-            if (!value) {
-              Swal.showValidationMessage("Nhập rõ lý do rollback");
-            }
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            $http
-              .post("http://localhost:8080/api/billhistory", {
-                createBy: $rootScope.user.username,
-                note: result.value,
-                status: rollbackStatus,
-                idBill: id,
-              })
-              .then(function (resp) {
-                $http
-                  .put("http://localhost:8080/api/bill/updatestatusbill", {
-                    code: code,
-                    status: rollbackStatus,
-                  })
-                  .then(function (re) {
-                    Swal.fire("Rollback thành công!", "", "success");
-                    $scope.getBill();
-                  });
-              });
-          }
-        });
-      }
-    };
-
-    $scope.calculateRollbackStatus = function (currentStatus) {
-      switch (currentStatus) {
-        case 3:
-          return 2;
-        case 2:
-          return 1;
-        case 1:
-          return 0;
-        default:
-          return null;
-      }
-    };
+    
 
     if ($scope.bill.status === 2) {
       if ($scope.bill.payStatus === 0) {
@@ -399,6 +348,58 @@ window.HoaDonController = function (
             });
         }
       });
+    }
+  };
+  $scope.rollback = function (code, id) {
+    var rollbackStatus = $scope.calculateRollbackStatus($scope.bill.status);
+
+    if (rollbackStatus !== null) {
+      Swal.fire({
+        title: "Roll back",
+        inputLabel: "Ghi chú",
+        input: "textarea",
+        showCancelButton: true,
+        confirmButtonText: "Rollback",
+        preConfirm: (value) => {
+          if (!value) {
+            Swal.showValidationMessage("Nhập rõ lý do rollback");
+          }
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $http
+            .post("http://localhost:8080/api/billhistory", {
+              createBy: $rootScope.user.username,
+              note: result.value,
+              status: rollbackStatus,
+              idBill: id,
+            })
+            .then(function (resp) {
+              $http
+                .put("http://localhost:8080/api/bill/updatestatusbill", {
+                  code: code,
+                  status: rollbackStatus,
+                })
+                .then(function (re) {
+                  Swal.fire("Rollback thành công!", "", "success");
+                  $scope.getBill();
+                });
+            });
+        }
+      });
+    }
+  };
+
+  $scope.calculateRollbackStatus = function (currentStatus) {
+    switch (currentStatus) {
+      case 3:
+        return 2;
+      case 2:
+        return 1;
+      case 1:
+        return 0;
+      default:
+        return null;
     }
   };
   $scope.isChiTiet = false;
@@ -1369,4 +1370,4 @@ window.HoaDonController = function (
           });
       });
   };
-};
+};  

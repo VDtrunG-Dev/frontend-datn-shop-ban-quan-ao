@@ -14,14 +14,7 @@
     <div class="col-md-9">
 
       <div class="row">
-        <div class="col-md-6 add">
-          <label>Mã Khách Hàng <span class="vaid">*</span></label> <input class="haninput" ng-model="form.code">
-          <div ng-repeat="err in validationErrors">
-            <span class="validate" ng-if="err.objectName == 'customerReques' && err.field == 'code'">
-              {{err.defaultMessage}}
-            </span>
-          </div>
-        </div>
+        
         <div class="col-md-6 add">
           <label>Tên Khách Hàng <span class="vaid">*</span></label> <input class="haninput" ng-model="form.fullname">
           <div ng-repeat="err in validationErrors">

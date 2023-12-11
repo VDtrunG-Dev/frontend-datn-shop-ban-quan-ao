@@ -134,7 +134,7 @@
 								<!-- start product image -->
 								<a href="#/detail/{{sp.id}}" class="grid-view-item__link">
 
-									<span ng-if="sp.product.productImages.length > 2">
+									<span ng-if="sp.product.productImages.length > 1">
 										<span ng-repeat="image in sp.product.productImages">
 											<span ng-if="image.mainImage == true">
 												<!-- image -->
@@ -150,8 +150,8 @@
 											</span>
 										</span>
 									</span>
-									<span ng-if="sp.product.productImages.length == 1">
-										<span ng-repeat="image in sp.product.productImages">
+									 <span ng-if="sp.product.productImages.length == 1">
+										<span ng-repeat="image in sp.product.productImages"> 
 
 										   
 												<!-- image -->
@@ -212,13 +212,6 @@
 										</span>
 										
 									</div>
-									<!-- <div class="product-review">
-										<i class="font-13 fa fa-star"></i>
-										<i class="font-13 fa fa-star"></i>
-										<i class="font-13 fa fa-star"></i>
-										<i class="font-13 fa fa-star-o"></i>
-										<i class="font-13 fa fa-star-o"></i>
-									</div> -->
 									<!-- End product price -->
 								<!-- Variant -->
 								<!-- <ul class="swatches text-center" ng-repeat="img in sp.product.productImages">
@@ -251,7 +244,7 @@
 						<div class="grid-view_image">
 							<!-- start product image -->
 							<a href="#/detail/{{sp.id}}" class="grid-view-item__link">
-								<span ng-if="sp.product.productImages.length > 2">
+								<span ng-if="sp.product.productImages.length > 1">
 									<span ng-repeat="image in sp.product.productImages">
 										<span ng-if="image.mainImage == true">
 											<!-- image -->
