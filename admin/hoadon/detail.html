@@ -39,7 +39,7 @@
     <button class="btn btn-dark" ng-click="chitiet(bill.code)"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đơn hàng</button>
     <button ng-if="bill.status == 5" class="btn btn-dark" ng-click="chitiet(bill.code)"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đổi hàng</button>
     <button class="btn btn-dark" ng-click="rollback(bill.code, bill.id)" ng-if="bill.status == 2 || bill.status == 1"><i class="fa-solid fa-undo"></i> Rollback</button>
-
+    
   </div>
 
   
