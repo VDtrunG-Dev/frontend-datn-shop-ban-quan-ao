@@ -34,8 +34,8 @@ window.KhachHangController = function ($scope, $http, $location, $routeParams) {
           //add image
          var MainImage = document.getElementById("fileUpload").files;
             if (MainImage.length == 0){
-                // Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
-                // return;
+                Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
+                return;
             }
 
           var img = new FormData();
