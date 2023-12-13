@@ -19,7 +19,7 @@
                                 <label for="CustomerEmail">Tài khoản</label>
                                 <input ng-model="username" type="text" name="customer[email]" placeholder="" id="CustomerEmail" class="" autocorrect="off" autocapitalize="off" autofocus="">
                                 <div ng-repeat="err in validationErrors">
-                                  <span class="validate" ng-if="err.objectName == 'loginRequest' && err.field == 'username'">
+                                  <span style="color: red;" class="validate" ng-if="err.objectName == 'loginRequest' && err.field == 'username'">
                                      {{err.defaultMessage}}
                                   </span>
                                   </div>
@@ -31,7 +31,7 @@
                                 <label for="CustomerPassword">Mật khẩu</label>
                                 <input ng-model="password" type="password" value="" name="customer[password]" placeholder="" id="CustomerPassword" class="">    
                                 <div ng-repeat="err in validationErrors">
-                                  <span class="validate" ng-if="err.objectName == 'loginRequest' && err.field == 'password'">
+                                  <span style="color: red;" class="validate" ng-if="err.objectName == 'loginRequest' && err.field == 'password'">
                                      {{err.defaultMessage}}
                                   </span>
                                   </div>                    	

@@ -18,7 +18,7 @@
                                 <label for="FirstName">Mật khẩu cũ</label>
                                 <input type="password" ng-model="passcu" type="text" name="customer[first_name]" placeholder="" id="FirstName" autofocus="">
                                 <div ng-repeat="err in validationErrors">
-                                    <span class="validate" ng-if="err.objectName == 'changeForm' && err.field == 'PasswordCu'">
+                                    <span style="color: red;" class="validate" ng-if="err.objectName == 'changeForm' && err.field == 'PasswordCu'">
                                        {{err.defaultMessage}}
                                     </span>
                                     </div>   
@@ -30,7 +30,7 @@
                                 <label for="FirstName">Mật khẩu mới</label>
                                 <input type="password" ng-model="passmoi" type="text" name="customer[first_name]" placeholder="" id="FirstName" autofocus="">
                                 <div ng-repeat="err in validationErrors">
-                                    <span class="validate" ng-if="err.objectName == 'changeForm' && err.field == 'PasswordMoi'">
+                                    <span  style="color: red;" class="validate" ng-if="err.objectName == 'changeForm' && err.field == 'PasswordMoi'">
                                        {{err.defaultMessage}}
                                     </span>
                                     </div>   
@@ -41,7 +41,7 @@
                                 <label for="FirstName">Nhập lại mật khẩu mới</label>
                                 <input type="password" ng-model="repassmoi" type="text" name="customer[first_name]" placeholder="" id="FirstName" autofocus="">
                                 <div ng-repeat="err in validationErrors">
-                                    <span class="validate" ng-if="err.objectName == 'changeForm' && err.field == 'RePasswordMoi'">
+                                    <span style="color: red;" class="validate" ng-if="err.objectName == 'changeForm' && err.field == 'RePasswordMoi'">
                                        {{err.defaultMessage}}
                                     </span>
                                     </div>   
