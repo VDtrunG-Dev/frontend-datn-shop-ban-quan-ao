@@ -86,7 +86,7 @@
         <h6>Ngày mua : {{bill.purchaseDate | date:'dd-MM-yyyy'}} </h6>
         <h6 ng-if="bill.paymentDate != null">Ngày thanh toán : {{bill.paymentDate | date:'dd-MM-yyyy'}}</h6>
         <h6>Thông tin giao hàng : {{address.fullname}} - {{address.phone}} 
-       ( {{address.address}}, {{address.wardName}}, {{address.districtName}}, {{address.cityName}} )</h6>
+       ( {{address.addressDetail}}, {{address.wardName}}, {{address.districtName}}, {{address.cityName}} )</h6>
         <h6>Thanh toán :  {{bill.payType == 0 ? 'Thanh toán khi nhận hàng' : 'Thanh toán online qua VNPAY'}} (<span style="color: red;">{{bill.payStatus == 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}}</span>) </h6>
         <h6>Trạng thái đơn hàng  : {{bill.status == 0 ? 'Chờ xác nhận' : bill.status == 1 ? 'Chờ giao hàng' : bill.status == 2 ? 'Đang giao hàng' : bill.status == 3 ? 'Đã giao hàng' : bill.status == 4 ? 'Đã hủy' : 'Đổi trả'}}</h6>
     </div>

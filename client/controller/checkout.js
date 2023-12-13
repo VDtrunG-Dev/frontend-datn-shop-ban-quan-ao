@@ -1,11 +1,11 @@
 window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $location, AuthService, CartService) {
-  $scope.limitCharacters = function(text, limit) {
+  $scope.limitCharacters = function (text, limit) {
     if (text.length > limit) {
-        return text.substring(0, limit) + '...';
+      return text.substring(0, limit) + '...';
     }
     return text;
-};
-  
+  };
+
   //trang thanh toán
 
   $scope.checkOut = function () {
@@ -36,23 +36,23 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
         ).then(function (resp) {
           $scope.sendBillToMail($location.search().vnp_OrderInfo);
         })
-        // let amount = parseInt($location.search().vnp_Amount) / 100;
-        //   // Kiểm tra biến kiểm soát trước khi gọi hàm
+        let amount = parseInt($location.search().vnp_Amount) / 100;
+          // Kiểm tra biến kiểm soát trước khi gọi hàm
 
 
 
-        // Swal.fire(
-        //   "Thanh toán thành công !",
-        //   "Bạn đã thanh toán thành công số tiền " +
-        //     amount.toLocaleString("vi-VN", {
-        //       style: "currency",
-        //       currency: "VND",
-        //     }) +
-        //     "<br> cho đơn hàng : " +
-        //     $location.search().vnp_OrderInfo,
-        //   "success"
-        // );
-        // location.href = "#/myorder";
+        Swal.fire(
+          "Thanh toán thành công !",
+          "Bạn đã thanh toán thành công số tiền " +
+            amount.toLocaleString("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }) +
+            "<br> cho đơn hàng : " +
+            $location.search().vnp_OrderInfo,
+          "success"
+        );
+        location.href = "#/myorder";
       }
       if ($location.search().vnp_TransactionStatus === "02") {
         Swal.fire(
@@ -69,12 +69,12 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
       $scope.listCart = [];
       $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
         $scope.listCart = cart.data;
-        if($scope.listCart.length === 0){
-         if($location.path() === "/checkout"){
-          Swal.fire('Chưa có sản phẩm nào trong giỏ nên không thể vào trang thanh toán !','','error');
-          location.href= "#/cart";
-          return;
-         }
+        if ($scope.listCart.length === 0) {
+          if ($location.path() === "/checkout") {
+            Swal.fire('Chưa có sản phẩm nào trong giỏ nên không thể vào trang thanh toán !', '', 'error');
+            location.href = "#/cart";
+            return;
+          }
         }
         $scope.tongTien = 0;
         for (let i = 0; i < $scope.listCart.length; i++) {
@@ -92,6 +92,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
         $http.get("http://localhost:8080/api/address/" + IdCustomer).then(function (address) {
           $scope.listAddress = address.data;
           let idAddress = address.data[0].id;
+          console.log(idAddress)
           //load cart by user
           $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
             let TotalPrice = 0;
@@ -102,12 +103,12 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
                 parseFloat(cart.data[i].unitPrice) *
                 parseFloat(cart.data[i].quantity);
             }
-            
+
             $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + TotalPrice).then(function (resp) {
               $scope.listVoucher = resp.data;
             });
 
-            
+
             for (let i = 0; i < cart.data.length; i++) {
               TotalGam += cart.data[i].productDetail.weight * cart.data[i].quantity;
             }
@@ -171,8 +172,8 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
 
                     }
                   });
-                
-              // kêt thúc Tự động ap khuyến mãi
+
+                  // kêt thúc Tự động ap khuyến mãi
                   // dat hang
                   $scope.buy = function () {
                     Swal.fire({
@@ -555,7 +556,8 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
 
           //thay đổi địa chỉ giao hàng
           $scope.changeAddress = function () {
-            let idAddress = document.getElementById("idAddress").value;
+             idAddress = document.getElementById("idAddress").value;
+            console.log(idAddress + "Hoàng")
             //load cart by user
             $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
               let TotalPrice = 0;
@@ -605,8 +607,8 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
             });
           };
         });
-        
-        
+
+
         $scope.apMa = function () {
           $scope.couponGiamGia = 0;
           $scope.giamGia = 0;
@@ -644,7 +646,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
               for (let i = 0; i < $scope.listVoucher.length; i++) {
                 if (code === $scope.listVoucher[i].code) {
 
-                 
+
                   $scope.voucherName = $scope.listVoucher[i].name;
                   $scope.voucherType = $scope.listVoucher[i].typeVoucher;
                   $scope.voucherIs = $scope.listVoucher[i].isVoucher;
@@ -876,7 +878,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
             }
             $scope.checkVoucher = false;
             $scope.giamGia = $scope.couponGiamGia - $scope.giamGia;
-            $scope.tienThanhToan = TotalPrice + $scope.phiShip ;
+            $scope.tienThanhToan = TotalPrice + $scope.phiShip;
 
           })
 
@@ -992,14 +994,14 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
           $scope.errorPhone = "Chưa nhập số điện thoại";
           return;
         } else {
-            $scope.errorPhone = "";
+          $scope.errorPhone = "";
         }
 
         if (diachicuthe.trim() === '') {
           $scope.errorDetailAddress = "Chưa nhập Địa chỉ cụ thể";
           return;
         } else {
-            $scope.errorDetailAddress = "";
+          $scope.errorDetailAddress = "";
         }
         $http.post('http://localhost:8080/api/address/add', {
           fullname: tennguoimua,
@@ -1945,55 +1947,55 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
 
       $http.get('http://localhost:8080/api/bill/getbycode/' + code).then(function (billexport) {
         $scope.billexport = billexport.data;
-        $http.get('http://localhost:8080/api/address/get/' + billexport.data.idAddress).then(function (add) {
-          $scope.addressexport = add.data;
-        }).then(function (resp) {
-          $http.get("http://localhost:8080/api/bill/getallbybill/" + code).then(function (resp) {
-            $scope.listItemExport = resp.data;
+        // $http.get('http://localhost:8080/api/address/get/' + billexport.data.idAddress).then(function (add) {
+        $scope.addressexport = billexport.data;
+        // }).then(function (resp) {
+        $http.get("http://localhost:8080/api/bill/getallbybill/" + code).then(function (resp) {
+          $scope.listItemExport = resp.data;
 
 
 
 
-            $http.get("http://localhost:8080/api/customer/" + IdCustomer).then(function (response) {
-              // Lấy phần tử bằng ID
-              var myElement = document.getElementById('exportbill');
+          $http.get("http://localhost:8080/api/customer/" + IdCustomer).then(function (response) {
+            // Lấy phần tử bằng ID
+            var myElement = document.getElementById('exportbill');
 
-              // Lấy HTML từ phần tử và in ra console
-              var htmlContent = myElement.innerHTML;
-              // Lấy ngày và giờ hiện tại
-              var currentDate = new Date();
+            // Lấy HTML từ phần tử và in ra console
+            var htmlContent = myElement.innerHTML;
+            // Lấy ngày và giờ hiện tại
+            var currentDate = new Date();
 
-              // Lấy giờ, phút, giây
-              var hours = currentDate.getHours();
-              var minutes = currentDate.getMinutes();
+            // Lấy giờ, phút, giây
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
 
-              // Lấy ngày, tháng, năm
-              var day = currentDate.getDate();
-              var month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
-              var year = currentDate.getFullYear();
-              var emailData = {
-                to: response.data.email,
-                subject: 'Cảm ơn bạn đã mua hàng tại Live Shop lúc ' + hours + ' giờ ' + minutes + ' phút ' + day + '/' + month + '/' + year,
-                bodyHtml: htmlContent,
-              };
+            // Lấy ngày, tháng, năm
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+            var year = currentDate.getFullYear();
+            var emailData = {
+              to: response.data.email,
+              subject: 'Cảm ơn bạn đã mua hàng tại Live Shop lúc ' + hours + ' giờ ' + minutes + ' phút ' + day + '/' + month + '/' + year,
+              bodyHtml: htmlContent,
+            };
 
-              $http.post('http://localhost:8080/api/sendmail', emailData).then(function (resp) {
-                Swal.fire(
-                  "Đặt hàng thành công !",
-                  "",
-                  "success"
-                );
+            $http.post('http://localhost:8080/api/sendmail', emailData).then(function (resp) {
+              Swal.fire(
+                "Đặt hàng thành công !",
+                "",
+                "success"
+              );
 
-                $rootScope.listCartIndex = [];
-                $rootScope.tongTienIndex = 0;
-                location.href = "#/myorder";
-              })
-
+              $rootScope.listCartIndex = [];
+              $rootScope.tongTienIndex = 0;
+              location.href = "#/myorder";
             })
+
           })
         })
-
       })
+
+      // })
 
 
 

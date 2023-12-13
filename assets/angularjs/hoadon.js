@@ -5,7 +5,7 @@ window.HoaDonController = function (
   $routeParams,
   $rootScope,
   $timeout
-) {
+) { 
   $scope.list = [];
   $http.get("http://localhost:8080/api/bill/getall").then(function (rest) {
     $scope.list = rest.data;
@@ -146,7 +146,7 @@ window.HoaDonController = function (
   let code = $routeParams.code;
   $scope.address = {};
   $http
-    .get("http://localhost:8080/api/address/getBill/" + code)
+    .get("http://localhost:8080/api/bill/getbycode/" + code)
     .then(function (resp) {
       $scope.address = resp.data;
     });
@@ -183,8 +183,8 @@ window.HoaDonController = function (
               .then(function (resp) {
                 $scope.listItem = resp.data;
               });
-            $http
-              .get("http://localhost:8080/api/address/getBill/" + code)
+              $http
+              .get("http://localhost:8080/api/bill/getbycode/" + code)
               .then(function (resp) {
                 $scope.address = resp.data;
               });
@@ -412,6 +412,7 @@ window.HoaDonController = function (
         $scope.listbillhistory = resp.data;
       });
   };
+
   $scope.isUpdateAddress = false;
   $scope.updateAddress = function (code) {
     $scope.isUpdateAddress = !$scope.isUpdateAddress;
@@ -440,7 +441,7 @@ window.HoaDonController = function (
       method: "GET",
       url:
         "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" +
-        $scope.address.districtId,
+        $scope.bill.districtId,
       headers: {
         token: "f22a8bb9-632c-11ee-b394-8ac29577e80e",
       },
@@ -508,7 +509,7 @@ window.HoaDonController = function (
       selectElement2.options[selectElement2.selectedIndex].textContent;
 
     $http
-      .post("http://localhost:8080/api/address", {
+      .post("http://localhost:8080/api/bill/updateDiaChi?Code=" + code, {
         fullname: tennguoimua,
         phone: sodienthoai,
         address: diachicuthe,
@@ -519,14 +520,14 @@ window.HoaDonController = function (
         districtName: districtName,
         wardName: wardName,
       })
-      .then(function (adds) {
-        $http
-          .put(
-            "http://localhost:8080/api/bill/updateDiaChi?Code=" +
-              code +
-              "&IdAddress=" +
-              adds.data.id
-          )
+      // .then(function (adds) {
+      //   $http
+      //     .put(
+      //       "http://localhost:8080/api/bill/updateDiaChi?Code=" +
+      //         code +
+      //         "&IdAddress=" +
+      //         adds.data.id
+      //     )
           .then(function (res) {
             $http
               .post("http://localhost:8080/api/billhistory", {
@@ -545,7 +546,7 @@ window.HoaDonController = function (
                 $scope.getBill();
               });
           });
-      });
+      // });
   };
 
   $scope.huy = function (code, id) {

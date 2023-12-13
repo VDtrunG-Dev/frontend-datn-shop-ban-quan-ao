@@ -17,7 +17,7 @@ $http.get(urlsize).then(function (response) {
 });
  //load product
  $scope.listPro = [];
- $http.get(url).then(function (response) {
+ $http.get(url).then(function (response) { 
    $scope.listPro = response.data;
  });
    
@@ -31,7 +31,7 @@ $http.get(urlsize).then(function (response) {
       $scope.bill = resp.data;
     })
     $scope.address = {};
-    $http.get("http://localhost:8080/api/address/getBill/"+code).then(function(resp){
+    $http.get("http://localhost:8080/api/bill/getbycode/"+code).then(function(resp){
       $scope.address = resp.data;
     })
     $http.get("http://localhost:8080/api/bill/getallbybill/"+code).then(function(resp){
