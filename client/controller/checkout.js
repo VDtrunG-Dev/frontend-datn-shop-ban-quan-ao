@@ -106,7 +106,8 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
             $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + TotalPrice).then(function (resp) {
               $scope.listVoucher = resp.data;
             });
-        
+
+            
             for (let i = 0; i < cart.data.length; i++) {
               TotalGam += cart.data[i].productDetail.weight * cart.data[i].quantity;
             }
@@ -141,6 +142,37 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
                   $scope.phiShip = ship.data.data.total;
                   $scope.tienThanhToan = TotalPrice + ship.data.data.total;
 
+                  // Tự động ap khuyến mãi
+
+                  $http.get('http://localhost:8080/api/voucher/getVoucherTop/' + TotalPrice).then(function (resp) {
+                    $scope.voucher = resp.data
+                    $scope.giamGia = "0";
+                    if ($scope.voucher.isVoucher === false) {
+                      if ($scope.voucher.typeVoucher === false) {
+                        if ($scope.voucher.cash > TotalPrice) {
+                          $scope.giamGia += TotalPrice;
+                          $scope.voucherGiamGia += TotalPrice;
+                        }
+                        else {
+                          $scope.giamGia += $scope.voucher.cash;
+                          $scope.voucherGiamGia += $scope.voucher.cash;
+                        }
+                      }
+                      else {
+                        $scope.giamGia += (TotalPrice * (resp.data.discount * 0.01));
+                        $scope.voucherGiamGia += (TotalPrice * (resp.data.discount * 0.01));
+                      }
+                      $scope.voucherName = $scope.voucher.name
+                      $scope.discountVoucher = $scope.voucher.discount + '%';
+                      $scope.checkVoucher = true;
+                      $scope.voucherIs = $scope.voucher.isVoucher;
+                      $scope.voucherType = $scope.voucher.typeVoucher;
+                      $scope.tienThanhToan = TotalPrice + $scope.phiShip - ($scope.giamGia);
+
+                    }
+                  });
+                
+              // kêt thúc Tự động ap khuyến mãi
                   // dat hang
                   $scope.buy = function () {
                     Swal.fire({
@@ -746,23 +778,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
 
 
                     }
-
-
-
-
-
                   }
-
-
-
-
-
-
-
-
-
-
-
 
 
                 }
@@ -851,7 +867,6 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
           $scope.listCheck = [];
           $scope.giamGia = 0;
           $scope.voucherType = false;
-          document.getElementById('coupon-code').value = '';
           $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
             let TotalPrice = 0;
             for (let i = 0; i < cart.data.length; i++) {
@@ -861,7 +876,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
             }
             $scope.checkVoucher = false;
             $scope.giamGia = $scope.couponGiamGia - $scope.giamGia;
-            $scope.tienThanhToan = TotalPrice + $scope.phiShip - $scope.couponGiamGia + $scope.voucherGiamGia;
+            $scope.tienThanhToan = TotalPrice + $scope.phiShip ;
 
           })
 
@@ -871,7 +886,6 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
           $scope.listCheck1 = [];
           $scope.giamGia = 0;
           document.getElementById('voucher1').style.display = 'none';
-          document.getElementById('coupon-code').value = '';
           $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
             let TotalPrice = 0;
             for (let i = 0; i < cart.data.length; i++) {

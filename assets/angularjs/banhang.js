@@ -1528,11 +1528,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
           $scope.tinhPhiShip();
           document.getElementById('code-coupon').value = '';
           $scope.tienThanhToan = $scope.tongTien + $scope.phiShip - ($scope.couponGiamGia + $scope.voucherGiamGia);
-
-
-
         }
-
 
       }
       if ($scope.tongTien < $scope.giamGia) {
@@ -2454,8 +2450,37 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + $scope.tongTien).then(function (resp) {
       $scope.listVoucher = resp.data;
     })
+    $http.get('http://localhost:8080/api/voucher/getVoucherTop/' + $scope.tongTien).then(function (resp) {
+    $scope.voucher = resp.data
+    if ($scope.voucher.isVoucher === false) {
+      if ($scope.voucher.typeVoucher === false) {
+        if ($scope.voucher.cash > $scope.tongTien) {
+          $scope.giamGia += $scope.tongTien;
+          $scope.voucherGiamGia += $scope.tongTien;
+        }
+        else {
+          $scope.giamGia += $scope.voucher.cash;
+          $scope.voucherGiamGia += $scope.voucher.cash;
+        }
+      }
+      else {
+        $scope.giamGia += ($scope.tongTien * (resp.data.discount * 0.01));
+        $scope.voucherGiamGia += ($scope.tongTien * (resp.data.discount * 0.01));
+      }
+      $scope.voucherName = $scope.voucher.name
+      $scope.discountVoucher = $scope.voucher.discount + '%';
+      $scope.checkVoucher = true;
+      $scope.voucherIs = $scope.voucher.isVoucher;
+      $scope.voucherType = $scope.voucher.typeVoucher;
+      $scope.tienThanhToan = $scope.tongTien - $scope.giamGia;
+    }
+
+  
+  });
+  
   });
 
+  
   $scope.showAddKH = false;
   $scope.add = function () {
 
