@@ -61,7 +61,7 @@
           id="home-tab"
           data-bs-toggle="tab"
           href="#home"
-          >Khách Hàng Còn Hoạt Động</a
+          >Còn Hoạt Động</a
         >
       </li>
       <li class="nav-item">
@@ -70,7 +70,7 @@
           id="profile-tab"
           data-bs-toggle="tab"
           href="#profile"
-          >Khách Hàng Dừng Hoạt Động</a
+          >Dừng Hoạt Động</a
         >
       </li>
     </ul>
@@ -93,6 +93,9 @@
               <td>{{dm.name}}</td>
               <td>{{dm.description}}</td>
               <td>
+                <a href="#/materials/update/{{dm.id}}"
+                  ><button class="btn btn-indigo">Sửa</button></a
+                >
                 <button
                   style="margin-top: 5px"
                   class="btn btn-danger"
@@ -125,9 +128,7 @@
               <td>{{dm.name}}</td>
               <td>{{dm.description}}</td>
               <td>
-                <a href="#/materials/update/{{dm.id}}"
-                  ><button class="btn btn-indigo">Sửa</button></a
-                >
+
                 <button
                   style="margin-top: 5px"
                   class="btn btn-danger"
