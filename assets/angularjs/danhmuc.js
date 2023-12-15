@@ -15,7 +15,12 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
         name : '',
         description : '',
     }
+    
 
+    //load category ngừng hoạt động
+    $http.get("http://localhost:8080/api/category/stopworking").then(function(response){
+        $scope.categoryStops = response.data;
+    })
     //add category
     $scope.add = function(){
         $http.post(urlcategory,{
@@ -65,21 +70,67 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                $http.put("http://localhost:8080/api/category/delete/"+id).then(function (response){
+                $http.delete("http://localhost:8080/api/category/delete/" + id)
+                    .then(function (response){
+                        if (response.status === 200){
+                            Swal.fire('Xóa thành công !', '', 'success')
+                            $scope.loadAll();
+                            $http.get("http://localhost:8080/api/category/stopworking").then(function(response){
+                                $scope.categoryStops = response.data;
+                            })
+                        } else {
+                            // Xử lý khi có lỗi từ server nhưng không phải lỗi 200
+                            Swal.fire('Xóa thất bại !', '', 'error');
+                        }
+                    })
+                    .catch(function(err){
+                        // Xử lý lỗi khi gọi API delete
+                        $http.put("http://localhost:8080/api/category/deletefake/" + id)
+                            .then(function(response){
+                                Swal.fire('Không thể xóa danh mục! Đã chuyển ngừng hoạt động', '', 'error')
+                                $scope.loadAll();
+                                $http.get("http://localhost:8080/api/category/stopworking").then(function(response){
+                                    $scope.categoryStops = response.data;
+                                })
+                            })
+                            .catch(function(error){
+                                // Xử lý lỗi khi gọi API put
+                                Swal.fire('Lỗi khi xóa danh mục! Thử lại sau', '', 'error');
+                                console.error('Error:', error);
+                            });
+                    });
+            }
+        });
+    }
+    
+    
+
+
+    //restore category
+    $scope.restore = function (id){
+        Swal.fire({
+            title: 'Bạn có chắc muốn khôi phục ?',
+            showCancelButton: true,
+            confirmButtonText: 'Khôi Phục',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                $http.put("http://localhost:8080/api/category/restore/"+id).then(function (response){
                     if (response.status === 200){
-                        Swal.fire('Xóa thành công !', '', 'success')
+                        Swal.fire('Khôi Phúc Thành Công !', '', 'success')
                         $scope.loadAll();
+                        $http.get("http://localhost:8080/api/category/stopworking").then(function(response){
+                            $scope.categoryStops = response.data;
+                        })
                     }
                     else{
-                        Swal.fire('Xóa thất bại !', '', 'error')
+                        Swal.fire('Khôi Phục thất bại !', '', 'error')
                     }
                 })
 
             }
         })
     }
-
-
 
     //detail 
 
@@ -100,6 +151,37 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
         },
         get count() {
             return Math.ceil(1.0 * $scope.list.length / this.size);
+        },
+
+        first() {
+            this.page = 0;
+        },
+        prev() {
+            this.page--;
+            if (this.page < 0) {
+                this.last();
+            }
+        },
+        next() {
+            this.page++;
+            if (this.page >= this.count) {
+                this.first();
+            }
+        },
+        last() {
+            this.page = this.count - 1;
+        }
+    }
+
+    $scope.pagerStop = {
+        page: 0,
+        size: 5,
+        get items() {
+            var start = this.page * this.size;
+            return $scope.categoryStops.slice(start, start + this.size);
+        },
+        get count() {
+            return Math.ceil(1.0 * $scope.categoryStops.length / this.size);
         },
 
         first() {

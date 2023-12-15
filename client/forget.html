@@ -18,7 +18,7 @@
                                 <label for="FirstName">Tên tài khoản</label>
                                 <input ng-model="form.username" type="text" name="customer[first_name]" placeholder="" id="FirstName" autofocus="">
                                 <div ng-repeat="err in validationErrors">
-                                    <span class="validate" ng-if="err.objectName == 'forgetForm' && err.field == 'Username'">
+                                    <span style="color: red;" class="validate" ng-if="err.objectName == 'forgetForm' && err.field == 'Username'">
                                        {{err.defaultMessage}}
                                     </span>
                                     </div>   
@@ -30,7 +30,7 @@
                                 <label for="CustomerEmail">Email</label>
                                 <input ng-model="form.email" type="email" name="customer[email]" placeholder="" id="CustomerEmail" class="" autocorrect="off" autocapitalize="off" autofocus="">
                                 <div ng-repeat="err in validationErrors">
-                                    <span class="validate" ng-if="err.objectName == 'forgetForm' && err.field == 'Email'">
+                                    <span style="color: red;" class="validate" ng-if="err.objectName == 'forgetForm' && err.field == 'Email'">
                                        {{err.defaultMessage}}
                                     </span>
                                     </div>   
