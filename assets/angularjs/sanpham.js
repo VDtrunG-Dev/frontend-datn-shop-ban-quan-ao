@@ -384,8 +384,8 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
 
         var MainImage = document.getElementById("fileUpload").files;
         if (MainImage.length == 0) {
-            Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
-            return;
+            // Swal.fire('Vui lòng thêm ảnh đại diện cho sản phẩm !', '', 'error');
+            // return;
         }
         $scope.get = function (name) {
             return document.getElementById(name).value;
