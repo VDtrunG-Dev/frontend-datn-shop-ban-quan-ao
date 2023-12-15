@@ -2493,8 +2493,8 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     //add image
     var MainImage = document.getElementById("fileUpload").files;
     if (MainImage.length == 0) {
-      Swal.fire('Vui lòng thêm ảnh đại diện cho khách hàng !', '', 'error');
-      return;
+      // Swal.fire('Vui lòng thêm ảnh đại diện cho khách hàng !', '', 'error');
+      // return;
     }
 
     var img = new FormData();
@@ -2513,35 +2513,30 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
         image: upImage.data[0],
         gender: gender,
         phone: $scope.form.phone,
-        email: $scope.form.email
+        email: $scope.form.email,
       }).then(function (resp) {
         if (resp.status === 200) {
           $http.post("http://localhost:8080/api/cart/addCart", {
-            idCustomer: resp.data.id
+            idCustomer: resp.data.id,
           }).then(function (cart) {
-
             $("#addKH").modal('hide'); 
-            Swal.fire('Thêm Thành Công! ', '', 'success')
+            Swal.fire('Thêm Thành Công! ', '', 'success');
             $http.get("http://localhost:8080/api/customer").then(function (resp) {
               $scope.listCustomer = resp.data;
-            })
-
+            });
             setTimeout(() => {
-
               location.href = "#/sell/view";
             }, 2000);
-
-
-          })
+          });
 
         }
       }).catch(function (err) {
         if (err.status === 400) {
           $scope.validationErrors = err.data;
         }
-      })
-    })
+      });
+    });
 
 
-  }
+  };
 }
