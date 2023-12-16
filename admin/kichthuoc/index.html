@@ -25,164 +25,137 @@
         width="20"
         height="20"
         viewBox="0,0,256,256"
-      ></svg>
+      >
+        <!-- Replace this with your actual SVG code for the export icon -->
+      </svg>
       Xuất Exel
     </button>
   </div>
-  <ul class="nav nav-tabs" id="myTabs">
-    <li class="nav-item">
-      <a
-        class="nav-link active"
-        id="active-tab"
-        data-bs-toggle="tab"
-        href="#active"
-        >Đang Hoạt Động</a
-      >
-    </li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        id="inactive-tab"
-        data-bs-toggle="tab"
-        href="#inactive"
-        >Ngừng Hoạt Động</a
-      >
-    </li>
-  </ul>
+  <div class="container mt-5">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="mySizeTabs">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          id="active-tab"
+          data-bs-toggle="tab"
+          href="#activeSizes"
+        >
+          Đang Hoạt Động
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="inactive-tab"
+          data-bs-toggle="tab"
+          href="#inactiveSizes"
+        >
+          Ngừng Hoạt Động
+        </a>
+      </li>
+    </ul>
 
-  <div class="tab-content mt-2">
-    <div class="tab-pane fade show active" id="active">
-      <table id="tblActiveSizes" class="table">
-        <thead>
-          <tr>
-            <td scope="col">#</td>
-            <td scope="col">ID Kích Thước</td>
-            <td scope="col">Tên Kích Thước</td>
-            <td scope="col">Mô Tả</td>
-            <td scope="col">Hành Động</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="dm in pager.items">
-            <td>{{$index + 1}}</td>
-            <td>{{dm.id}}</td>
-            <td>{{dm.name}}</td>
-            <td>{{dm.description}}</td>
-            <td>
-              <a href="#/sizes/update/{{dm.id}}">
-                <button class="btn btn-indigo">Sửa</button>
-              </a>
-              <button
-                style="margin-top: 5px"
-                class="btn btn-danger"
-                ng-click="delete(dm.id)"
-              >
-                Xóa
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="text-center">
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-          <button
-            ng-click="activeSizesPager.first()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angles-left"></i>
-          </button>
-          <button
-            ng-click="activeSizesPager.prev()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angle-left"></i>
-          </button>
-          <button type="button" class="btn btn-outline-secondary">
-            {{activeSizesPager.page+1}} of {{activeSizesPager.count}}
-          </button>
-          <button
-            ng-click="activeSizesPager.next()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angle-right"></i>
-          </button>
-          <button
-            ng-click="activeSizesPager.last()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angles-right"></i>
-          </button>
-        </div>
+    <!-- Tab panes -->
+    <div class="tab-content mt-2">
+      <div class="tab-pane fade show active" id="activeSizes">
+        <table id="tblSize" class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">ID Kích Thước</th>
+              <th scope="col">Tên Kích Thước</th>
+              <th scope="col">Mô Tả</th>
+              <th scope="col">Hành Động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="size in pager.items">
+              <td>{{$index + 1}}</td>
+              <td>{{size.id}}</td>
+              <td>{{size.name}}</td>
+              <td>{{size.description}}</td>
+              <td>
+                <a href="#/sizes/update/{{size.id}}">
+                  <button class="btn btn-indigo">Sửa</button>
+                </a>
+                <button
+                  style="margin-top: 5px"
+                  class="btn btn-danger"
+                  ng-click="delete(size.id)"
+                >
+                  Xóa
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="inactiveSizes">
+        <table id="tblInactiveSize" class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">ID Kích Thước</th>
+              <th scope="col">Tên Kích Thước</th>
+              <th scope="col">Mô Tả</th>
+              <th scope="col">Hành Động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="size in pagerStop.items">
+              <td>{{$index + 1}}</td>
+              <td>{{size.id}}</td>
+              <td>{{size.name}}</td>
+              <td>{{size.description}}</td>
+              <td>
+                <button
+                  style="margin-top: 5px"
+                  class="btn btn-danger"
+                  ng-click="restore(size.id)"
+                >
+                  Khôi Phục
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="tab-pane fade" id="inactive">
-      <table id="tblInactiveSizes" class="table">
-        <thead>
-          <tr>
-            <td scope="col">#</td>
-            <td scope="col">ID Kích Thước</td>
-            <td scope="col">Tên Kích Thước</td>
-            <td scope="col">Mô Tả</td>
-            <td scope="col">Hành Động</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="dm in pagerStop.items">
-            <td>{{$index + 1}}</td> 
-            <td>{{dm.id}}</td>
-            <td>{{dm.name}}</td>
-            <td>{{dm.description}}</td>
-            <td>
-              <button
-                style="margin-top: 5px"
-                class="btn btn-success"
-                ng-click="restore(dm.id)"
-              >
-                Kích Hoạt
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="text-center">
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-          <button
-            ng-click="pagerStop.first()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angles-left"></i>
-          </button>
-          <button
-            ng-click="pagerStop.prev()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angle-left"></i>
-          </button>
-          <button type="button" class="btn btn-outline-secondary">
-            {{pagerStop.page+1}} of {{pagerStop.count}}
-          </button>
-          <button
-            ng-click="pagerStop.next()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angle-right"></i>
-          </button>
-          <button
-            ng-click="pagerStop.last()"
-            type="button"
-            class="btn btn-outline-secondary"
-          >
-            <i class="fa-solid fa-angles-right"></i>
-          </button>
-        </div>
-      </div>
+  </div>
+  <div class="text-center">
+    <div class="btn-group" role="group" aria-label="Basic outlined example">
+      <button
+        ng-click="pager.first()"
+        type="button"
+        class="btn btn-outline-secondary"
+      >
+        <i class="fa-solid fa-angles-left"></i>
+      </button>
+      <button
+        ng-click="pager.prev()"
+        type="button"
+        class="btn btn-outline-secondary"
+      >
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+      <button type="button" class="btn btn-outline-secondary">
+        {{pager.page + 1}} of {{pager.count}}
+      </button>
+      <button
+        ng-click="pager.next()"
+        type="button"
+        class="btn btn-outline-secondary"
+      >
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+      <button
+        ng-click="pager.last()"
+        type="button"
+        class="btn btn-outline-secondary"
+      >
+        <i class="fa-solid fa-angles-right"></i>
+      </button>
     </div>
   </div>
 </div>

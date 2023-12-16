@@ -350,7 +350,7 @@ $scope.deleteImage = function(index) {
           }
           var params = {
             IdProduct: id,
-            IdColor: selectedVal,
+            IdColor: selectedVal, 
             IdSize: selectedVal1,
           };
           $http({
@@ -364,6 +364,20 @@ $scope.deleteImage = function(index) {
     
         //thêm sản phẩm vào giỏ hàng
         $scope.addToCart = function () {
+          if (AuthService.getCustomer() === null) {
+            Swal.fire({
+              title: "Chưa Đăng Nhập",
+              showCancelButton: true,
+              confirmButtonText: "Đăng Nhập",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                location.href = "#/myorder";
+              }
+            });
+          
+            return;
+          }
+          
           if (selectedVal === "") {
             Swal.fire("Vui lòng chọn màu sắc !!", "", "error");
             return;
