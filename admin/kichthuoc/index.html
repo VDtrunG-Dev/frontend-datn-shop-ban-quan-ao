@@ -63,7 +63,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="dm in activeSizesPager.items">
+          <tr ng-repeat="dm in pager.items">
             <td>{{$index + 1}}</td>
             <td>{{dm.id}}</td>
             <td>{{dm.name}}</td>
@@ -131,8 +131,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="dm in inactiveSizesPager.items">
-            <td>{{$index + 1}}</td>
+          <tr ng-repeat="dm in pagerStop.items">
+            <td>{{$index + 1}}</td> 
             <td>{{dm.id}}</td>
             <td>{{dm.name}}</td>
             <td>{{dm.description}}</td>
@@ -140,7 +140,7 @@
               <button
                 style="margin-top: 5px"
                 class="btn btn-success"
-                ng-click="activate(dm.id)"
+                ng-click="restore(dm.id)"
               >
                 Kích Hoạt
               </button>
@@ -151,31 +151,31 @@
       <div class="text-center">
         <div class="btn-group" role="group" aria-label="Basic outlined example">
           <button
-            ng-click="inactiveSizesPager.first()"
+            ng-click="pagerStop.first()"
             type="button"
             class="btn btn-outline-secondary"
           >
             <i class="fa-solid fa-angles-left"></i>
           </button>
           <button
-            ng-click="inactiveSizesPager.prev()"
+            ng-click="pagerStop.prev()"
             type="button"
             class="btn btn-outline-secondary"
           >
             <i class="fa-solid fa-angle-left"></i>
           </button>
           <button type="button" class="btn btn-outline-secondary">
-            {{inactiveSizesPager.page+1}} of {{inactiveSizesPager.count}}
+            {{pagerStop.page+1}} of {{pagerStop.count}}
           </button>
           <button
-            ng-click="inactiveSizesPager.next()"
+            ng-click="pagerStop.next()"
             type="button"
             class="btn btn-outline-secondary"
           >
             <i class="fa-solid fa-angle-right"></i>
           </button>
           <button
-            ng-click="inactiveSizesPager.last()"
+            ng-click="pagerStop.last()"
             type="button"
             class="btn btn-outline-secondary"
           >

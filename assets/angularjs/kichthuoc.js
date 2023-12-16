@@ -2,14 +2,22 @@
 window.KichThuocController = function($scope, $http, $location,$routeParams){
     let url = "http://localhost:8080/api/size";
     $scope.loadAll = function (){
-
         // load size
         $scope.list = [];
         $http.get(url).then(function (response){
             $scope.list = response.data;
         })
-
+        console.log($scope.list)
     }
+    $scope.loadStop = function (){
+
+        // load size
+        $scope.list = [];
+        $http.get("http://localhost:8080/api/size/stopworking").then(function (response){
+            $scope.listStop = response.data;
+        })
+    }
+    $scope.loadStop();
     $scope.loadAll();
     $scope.form = {
         name : '',
@@ -56,8 +64,33 @@ window.KichThuocController = function($scope, $http, $location,$routeParams){
         })
     }
 
-      //delete size
-      $scope.delete = function (id){
+    // Khôi phục
+    $scope.restore = function (id){
+        Swal.fire({
+            title: 'Bạn có chắc muốn khôi phục ?',
+            showCancelButton: true,
+            confirmButtonText: 'Khôi Phục',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                $http.put("http://localhost:8080/api/size/restore/"+id).then(function (response){
+                    if (response.status === 200){
+                        Swal.fire('Khôi Phúc Thành Công !', '', 'success')
+                        $scope.loadAll();
+                        $http.get("http://localhost:8080/api/size/stopworking").then(function(response){
+                            $scope.listStop = response.data;
+                        })
+                    }
+                    else{
+                        Swal.fire('Khôi Phục thất bại !', '', 'error')
+                    }
+                })
+
+            }
+        })
+    }
+     //delete category
+     $scope.delete = function (id){
         Swal.fire({
             title: 'Bạn có chắc muốn xóa ?',
             showCancelButton: true,
@@ -65,18 +98,37 @@ window.KichThuocController = function($scope, $http, $location,$routeParams){
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                $http.put("http://localhost:8080/api/size/delete/"+id).then(function (response){
-                    if (response.status === 200){
-                        Swal.fire('Xóa thành công !', '', 'success')
-                        $scope.loadAll();
-                    }
-                    else{
-                        Swal.fire('Xóa thất bại !', '', 'error')
-                    }
-                })
-
+                $http.delete("http://localhost:8080/api/size/delete/" + id)
+                    .then(function (response){
+                        if (response.status === 200){
+                            Swal.fire('Xóa thành công !', '', 'success')
+                            $scope.loadAll();
+                            $http.get("http://localhost:8080/api/size/stopworking").then(function(response){
+                                $scope.list = response.data;
+                            })
+                        } else {
+                            // Xử lý khi có lỗi từ server nhưng không phải lỗi 200
+                            Swal.fire('Xóa thất bại !', '', 'error');
+                        }
+                    })
+                    .catch(function(err){
+                        // Xử lý lỗi khi gọi API delete
+                        $http.put("http://localhost:8080/api/size/deletefake/" + id)
+                            .then(function(response){
+                                Swal.fire('Không thể xóa danh mục! Đã chuyển ngừng hoạt động', '', 'error')
+                                $scope.loadAll();
+                                $http.get("http://localhost:8080/api/size/stopworking").then(function(response){
+                                    $scope.listStop = response.data;
+                                })
+                            })
+                            .catch(function(error){
+                                // Xử lý lỗi khi gọi API put
+                                Swal.fire('Lỗi khi xóa danh mục! Thử lại sau', '', 'error');
+                                console.error('Error:', error);
+                            });
+                    });
             }
-        })
+        });
     }
 
 
@@ -100,6 +152,37 @@ window.KichThuocController = function($scope, $http, $location,$routeParams){
         },
         get count() {
             return Math.ceil(1.0 * $scope.list.length / this.size);
+        },
+
+        first() {
+            this.page = 0;
+        },
+        prev() {
+            this.page--;
+            if (this.page < 0) {
+                this.last();
+            }
+        },
+        next() {
+            this.page++;
+            if (this.page >= this.count) {
+                this.first();
+            }
+        },
+        last() {
+            this.page = this.count - 1;
+        }
+    }
+///page stop
+    $scope.pagerStop = {
+        page: 0,
+        size: 5,
+        get items() {
+            var start = this.page * this.size;
+            return $scope.listStop.slice(start, start + this.size);
+        },
+        get count() {
+            return Math.ceil(1.0 * $scope.listStop.length / this.size);
         },
 
         first() {

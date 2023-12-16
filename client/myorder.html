@@ -16,7 +16,7 @@
                <button ng-click="getStatus(1)" style="padding-right: 15px;" class="btn btn-dark">Chờ lấy hàng ({{chogiaohang}})</button>
                <button ng-click="getStatus(2)" style="padding-right: 15px;" class="btn btn-dark">Đang giao hàng ({{danggiaohang}})</button>
                <button ng-click="getStatus(3)" style="padding-right: 15px;" class="btn btn-dark">Đã giao hàng ({{dagiaohang}})</button>
-               <button ng-click="getStatus(4)" style="padding-right: 15px;" class="btn btn-dark">Đã hủy ({{dahuy}})</button>
+               <button ng-click="getStatus(4)" style="padding-right: 15px;" class="btn btn-red">Đã hủy ({{dahuy}})</button>
                <!-- <button ng-click="getStatus(5)" style="padding-right: 15px;" class="btn btn-dark">Hoàn trả ({{hoantra}})</button> -->
                <table class="table" style="margin-top: 10px;">
                 <thead class="cart__row cart__header">
@@ -38,7 +38,7 @@
                         <td class="text-center"><h3>{{hd.totalPrice + hd.shipPrice - hd.totalPriceLast | currency:'':0}} VNĐ</h3></td>
                         <td class="text-center"><h3>{{hd.payType == 0 ? 'Thanh toán khi nhận hàng' : 'Thanh toán qua VN Pay'}}</h3></td>
                         <td class="text-center" ng-if="hd.status != 4"><h3>{{hd.payStatus == 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}}</h3></td>
-                        <td class="text-center" ng-if="hd.status == 4"><h3>Đã hủy</h3></td>
+                        <td class="text-center" ng-if="hd.status == 4" ><h3 style="color: red;">Đã hủy</h3></td>
                         <td>
                             <button ng-if="hd.status == 0 && hd.payType == 1 && hd.payStatus == 0" class="btn btn-dark" ng-click="thanhtoan(hd.code,hd.totalPrice + hd.shipPrice - hd.totalPriceLast)"><i class="fa-solid fa-credit-card"></i> Thanh toán</button>
                             <button ng-click="togglePopup(hd.code)" class="btn btn-dark"><i class="fa-solid fa-circle-info"></i> Xem chi tiết</button>
@@ -87,7 +87,7 @@
         <h6 ng-if="bill.paymentDate != null">Ngày thanh toán : {{bill.paymentDate | date:'dd-MM-yyyy'}}</h6>
         <h6>Thông tin giao hàng : {{address.fullname}} - {{address.phone}} 
        ( {{address.addressDetail}}, {{address.wardName}}, {{address.districtName}}, {{address.cityName}} )</h6>
-        <h6>Thanh toán :  {{bill.payType == 0 ? 'Thanh toán khi nhận hàng' : 'Thanh toán online qua VNPAY'}} (<span style="color: red;">{{bill.payStatus == 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}}</span>) </h6>
+        <h6>Thanh toán :  {{bill.payType == 0 ? 'Thanh toán khi nhận hàng' : 'Thanh toán online qua VNPAY'}} (<span >{{bill.payStatus == 0 ? 'Chưa thanh toán' : 'Đã thanh toán'}}</span>) </h6>
         <h6>Trạng thái đơn hàng  : {{bill.status == 0 ? 'Chờ xác nhận' : bill.status == 1 ? 'Chờ giao hàng' : bill.status == 2 ? 'Đang giao hàng' : bill.status == 3 ? 'Đã giao hàng' : bill.status == 4 ? 'Đã hủy' : 'Đổi trả'}}</h6>
     </div>
     <div style="padding: 5px;">
