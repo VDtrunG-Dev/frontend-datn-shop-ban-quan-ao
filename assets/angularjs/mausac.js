@@ -9,7 +9,7 @@ window.MauSacController = function ($scope, $http, $location, $routeParams) {
   };
   $scope.loadAll();
   $scope.form = {
-    name: "",
+    name: "", 
     description: "",
   };
   $http
@@ -151,9 +151,34 @@ window.MauSacController = function ($scope, $http, $location, $routeParams) {
     });
   };
 
+  $scope.activate = function (id){
+    Swal.fire({
+        title: 'Bạn có chắc muốn khôi phục ?',
+        showCancelButton: true,
+        confirmButtonText: 'Khôi Phục',
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            $http.put("http://localhost:8080/api/color/restore/"+id).then(function (response){
+                if (response.status === 200){
+                    Swal.fire('Khôi Phúc Thành Công !', '', 'success')
+                    $scope.loadAll();
+                    $http.get("http://localhost:8080/api/color/stopworking").then(function(response){
+                        $scope.colorStops = response.data;
+                    })
+                }
+                else{
+                    Swal.fire('Khôi Phục thất bại !', '', 'error')
+                }
+            })
+
+        }
+    })
+}
+
   // pagation
   $scope.pager = {
-    page: 0,
+    page: 0, 
     size: 5,
     get items() {
       var start = this.page * this.size;
@@ -161,6 +186,37 @@ window.MauSacController = function ($scope, $http, $location, $routeParams) {
     },
     get count() {
       return Math.ceil((1.0 * $scope.list.length) / this.size);
+    },
+
+    first() {
+      this.page = 0;
+    },
+    prev() {
+      this.page--;
+      if (this.page < 0) {
+        this.last();
+      }
+    },
+    next() {
+      this.page++;
+      if (this.page >= this.count) {
+        this.first();
+      }
+    },
+    last() {
+      this.page = this.count - 1;
+    },
+  };
+// list color stop
+  $scope.pagerStop = {
+    page: 0,
+    size: 5,
+    get items() {
+      var start = this.page * this.size;
+      return $scope.colorStops.slice(start, start + this.size);
+    },
+    get count() {
+      return Math.ceil((1.0 * $scope.colorStops.length) / this.size);
     },
 
     first() {

@@ -31,7 +31,7 @@ window.NhanVienController = function ($scope, $http, $location, $routeParams) {
             .then(function (response) {
               if (response.status === 200) {
                 Swal.fire("Khôi Phúc Thành Công !", "", "success");
-                $scope.loadAll();
+                $scope.loadAll(); 
                 $http
                   .get("http://localhost:8080/api/employee/stopworking")
                   .then(function (response) {

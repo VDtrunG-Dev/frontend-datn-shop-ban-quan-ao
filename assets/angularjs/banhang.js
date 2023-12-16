@@ -803,7 +803,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        $http.get("http://localhost:8080/api/bill/huy/" + code).then(function (response) {
+        $http.delete("http://localhost:8080/api/bill/deletebill/" + code).then(function (response) {
           $http.get("http://localhost:8080/api/bill/getallbybill/" + code).then(function (resp) {
             for (let i = 0; i < resp.data.length; i++) {
               //get số lượng sản phẩm đang có
@@ -1878,10 +1878,10 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
       Swal.fire('Giỏ hàng của bạn đang rỗng !', '', 'error');
       return;
     }
-    if (document.getElementById('diachicuthe').style.display == 'block' && document.getElementById('diachicuthe').value.trim() === '' && document.getElementById("hinhThuc2").checked === true) {
-      Swal.fire('Vui lòng nhập địa chỉ !', '', 'error');
-      return;
-    }
+    // if (document.getElementById('diachicuthe').style.display == 'block' && document.getElementById('diachicuthe').value.trim() === '' && document.getElementById("hinhThuc2").checked === true) {
+    //   Swal.fire('Vui lòng nhập địa chỉ !', '', 'error');
+    //   return;
+    // }
     if (document.getElementById('nguoimua').style.display === 'block' && document.getElementById('tennguoimua').value.trim() === '' && document.getElementById("hinhThuc2").checked === true) {
       Swal.fire('Vui lòng nhập tên người mua !', '', 'error');
       return;
@@ -1948,7 +1948,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                 payStatus: 1,
                 idVoucher: idVoucher == null ? 0 : idVoucher,
                 idCoupon: idCoupon,
-                idAddress: 0,
+                
                 idCustomer: idCustomer,
                 paymentDate: new Date(),
                 delyveryDate: new Date(),
@@ -2065,6 +2065,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
                     payType: 0,
                     idCustomer: idCustomer,
                     payStatus: 0,
+                    
                     idAddress: adds.data.id,
                     idVoucher: idVoucher == null ? 0 : idVoucher,
                     idCoupon: idCoupon,
