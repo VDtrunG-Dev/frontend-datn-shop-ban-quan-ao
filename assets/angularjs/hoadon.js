@@ -59,7 +59,32 @@ window.HoaDonController = function (
   $http.get(url).then(function (response) {
     $scope.listPro = response.data;
   });
+  $scope.inHoaDon = function (code) {
+    $http.get('http://localhost:8080/api/bill/getbycode/' + code).then(function (billexport) {
+      $scope.billexport = billexport.data;
 
+    })
+      Swal.fire({
+        title: 'Xác Nhận In Hoá Đơn ' + code + ' ?',
+        showCancelButton: true,
+        confirmButtonText: 'In',
+      }).then((result) => {
+
+        if (result.isConfirmed) {
+
+          var element = document.getElementById('exportbill');
+
+
+          //custom file name
+          html2pdf().set({ filename: code + '.pdf' }).from(element).save();
+          Swal.fire('Đã xuất hóa đơn', '', 'success');
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
+        }
+        
+      });
+    }
   $scope.loc = function (status) {
     $scope.list = [];
     if (status === null) {

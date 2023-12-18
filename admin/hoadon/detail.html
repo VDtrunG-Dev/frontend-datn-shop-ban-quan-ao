@@ -38,10 +38,144 @@
     <button class="btn btn-dark" ng-click="huy(bill.code,bill.id)" ng-if="bill.status == 0 || bill.status == 1 || bill.status == 2 || bill.status == 3"><i class="fa-solid fa-ban"></i> Hủy đơn</button>
     <button class="btn btn-dark" ng-click="chitiet(bill.code)"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đơn hàng</button>
     <button ng-if="bill.status == 5" class="btn btn-dark" ng-click="chitiet(bill.code)"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đổi hàng</button>
+    <button class="btn btn-dark" ng-click="inHoaDon(bill.code)" ng-if="bill.status != 0 "><i
+      class="fa-solid fa-file-lines"></i> In Hoá Đơn</button>
     <button class="btn btn-dark" ng-click="rollback(bill.code, bill.id)" ng-if="bill.status == 2 || bill.status == 1"><i class="fa-solid fa-undo"></i> Rollback</button>
     
   </div>
 
+  <!-- exportbill -->
+<div style="display: none;">
+  <section id="exportbill">
+
+    <div class="invoice">
+      <div class="top_line"></div>
+      <div class="header">
+        <div class="i_row">
+          <div class="i_logo">
+            <img style="width: 200px; height: 100px;"
+              src="https://firebasestorage.googleapis.com/v0/b/shopthoitrang-f941e.appspot.com/o/logoNew.png?alt=media&token=aa17b52f-0170-4a45-92c3-f616c34d7b21">
+          </div>
+          <div class="i_title">
+            <h2>Hóa Đơn</h2>
+          </div>
+        </div>
+        <div class="i_row">
+          <div class="i_number">
+            <p class="p_title">Mã Hóa Đơn: {{billexport.code}}</p>
+            <p class="p_title" ng-if="billexport.typeStatus === 0">Thông tin giao hàng : {{billexport.fullname}} -
+              {{billexport.phone}} | {{billexport.address}}, {{billexport.wardName}},
+              {{billexport.districtName}}, {{billexport.cityName}}</p>
+            <p class="p_title">Phương thức thanh toán : {{billexport.payType === 0 ? 'Tiền mặt' : 'Online qua VNPay'}}
+            </p>
+            <p class="p_title">Phương thức mua hàng : {{billexport.typeStatus === 1 ? 'Mua tại quầy' : 'Mua online'}}
+            </p>
+          </div>
+
+        </div>
+      </div>
+      <div class="body">
+        <div class="i_table">
+          <div class="i_table_head">
+            <div class="i_row">
+              <div class="i_col w_55">
+                <p class="p_title">Sản Phẩm</p>
+              </div>
+              <div class="i_col w_15">
+                <p class="p_title">Số Lượng</p>
+              </div>
+              <div class="i_col w_15">
+                <p class="p_title">Đơn Giá</p>
+              </div>
+              <div class="i_col w_15">
+                <p class="p_title">Thành Tiền</p>
+              </div>
+            </div>
+          </div>
+          <div class="i_table_body">
+            <div class="i_row" ng-repeat="bill in listItemExport">
+
+              <div class="i_col w_55">
+
+                <div class="list-view-item__title">
+
+
+                  {{bill.productDetail.product.name | uppercase}}
+                  <br>
+                  SKU : {{bill.productDetail.product.code}}
+
+                </div>
+                <div class="cart__meta-text">
+                  Màu:
+                  <span ng-repeat="color in listColor">
+                    <span ng-if="color.id == bill.idColor">
+                      {{color.name}}
+                    </span>
+                  </span>
+                  <br>
+                  Kích Thước:
+                  <span ng-repeat="size in listSize">
+                    <span ng-if="size.id == bill.idSize">
+                      {{size.name}}
+                    </span>
+                  </span>
+                  <br>
+                </div>
+                </td>
+              </div>
+              <div class="i_col w_15">
+                <p>{{bill.quantity}}</p>
+              </div>
+              <div class="i_col w_15">
+                <p>{{bill.unitPrice | currency:'':0}}</p>
+              </div>
+              <div class="i_col w_15">
+                <p>{{bill.unitPrice * bill.quantity | currency:'':0}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="i_table_foot">
+            <div class="i_row">
+              <div class="i_col w_15">
+                <p></p>
+              </div>
+              <div class="i_col w_55">
+                <p></p>
+              </div>
+              <div class="i_col w_15">
+                <p>Tổng Tiền</p>
+                <p>Phí Ship</p>
+                <p>Giảm Giá</p>
+              </div>
+              <div class="i_col w_25">
+                <p>{{billexport.totalPrice | currency:'':0}}</p>
+                <p>{{billexport.shipPrice | currency:'':0}}</p>
+                <p>{{billexport.totalPriceLast | currency:'':0}}</p>
+              </div>
+            </div>
+            <div class="i_row grand_total_wrap">
+              <div class="i_col w_50">
+              </div>
+              <div class="i_col w_50 grand_total">
+                <p><span>Tổng Tiền Thanh Toán :</span>
+                  <span>{{billexport.totalPrice + billexport.shipPrice - billexport.totalPriceLast | currency:'':0}}
+                    VNĐ</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="bottom_line"></div>
+      </div>
+  </section>
+</div>
+<div class="loading-overlay" ng-show="isLoading">
+  <div class="loading-spinner"></div>
+
+
+</div>
   
 <div class="custom-border">
     <h4><i class="fa-solid fa-circle-info"></i> Thông Tin Đơn Hàng</h4>
