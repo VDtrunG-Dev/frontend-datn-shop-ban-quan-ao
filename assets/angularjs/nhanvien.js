@@ -234,6 +234,8 @@ window.NhanVienController = function ($scope, $http, $location, $routeParams) {
                 gender: $scope.form.gender,
                 phone: $scope.form.phone,
                 email: $scope.form.email,
+                status: status,
+                idRole: idRole,
               })
               .then(function (resp) {
                 if (resp.status === 200) {

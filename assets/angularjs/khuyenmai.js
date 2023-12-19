@@ -198,6 +198,10 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
 
     //add
     $scope.add = function(){
+<<<<<<< HEAD
+=======
+       
+>>>>>>> e1ea1ff82fe4bf132b2e32aac1f3f8354aa5d366
         
         
         if ($scope.form.startdate >= $scope.form.enddate) {

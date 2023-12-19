@@ -19,7 +19,7 @@
           <div class="row">
             
             <div class="col-md-6" style="margin-top: 30px;">
-              <label>Họ Tên </label> <input  class="haninput"  ng-model="form.fullname">
+              <label>Họ Tên<span class="vaid">*</span></label> <input  class="haninput"  ng-model="form.fullname">
               <div ng-repeat="err in validationErrors">
               <span class="validate" ng-if="err.objectName == 'employeeRequest' && err.field == 'Fullname'">
                  {{err.defaultMessage}}
@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="col-md-6 " style="margin-top: 10px;">
-              <label>Tài Khoản </label> <input  class="haninput"  ng-model="form.username">
+              <label>Tài Khoản<span class="vaid">*</span> </label> <input  class="haninput"  ng-model="form.username">
               <div ng-repeat="err in validationErrors">
               <span class="validate" ng-if="err.objectName == 'employeeRequest' && err.field == 'Username'">
                  {{err.defaultMessage}}
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="col-md-6 " style="margin-top: 10px;">
-              <label>Mật Khẩu </label> <input  class="haninput"  ng-model="form.password">
+              <label>Mật Khẩu<span class="vaid">*</span> </label> <input  class="haninput"  ng-model="form.password">
               <div ng-repeat="err in validationErrors">
               <span class="validate" ng-if="err.objectName == 'employeeRequest' && err.field == 'Password'">
                  {{err.defaultMessage}}
@@ -53,7 +53,7 @@
               </div>
             </div>
             <div class="col-md-6 "style="margin-top: 10px;">
-              <label>Số Điện Thoại </label> <input  class="haninput"  ng-model="form.phone">
+              <label>Số Điện Thoại<span class="vaid">*</span> </label> <input  class="haninput"  ng-model="form.phone">
               <div ng-repeat="err in validationErrors">
               <span class="validate" ng-if="err.objectName == 'employeeRequest' && err.field == 'Phone'">
                  {{err.defaultMessage}}
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="col-md-6 "style="margin-top: 10px;">
-              <label>Email </label> <input  class="haninput"  ng-model="form.email">
+              <label>Email<span class="vaid">*</span> </label> <input  class="haninput"  ng-model="form.email">
               <div ng-repeat="err in validationErrors">
               <span class="validate" ng-if="err.objectName == 'employeeRequest' && err.field == 'Email'">
                  {{err.defaultMessage}}
