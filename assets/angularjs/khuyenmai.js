@@ -10,7 +10,41 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
         })
 
     }
+    $scope.loadAllPrepare = function () {
+        
+        // load material
+        $scope.listPrepare = [];
+        $http.get("http://localhost:8080/api/voucher/prepare").then(function (response) {
+            $scope.listPrepare = response.data;
+        })
+
+    }
+
+    $scope.loadAllStop = function () {
+        
+        // load material
+        $scope.listStop = [];
+        $http.get("http://localhost:8080/api/voucher/stop").then(function (response) {
+            $scope.listStop = response.data;
+        })
+
+    }
+
+    $scope.loadAllDelete = function () {
+        
+        // load material
+        $scope.listDelete = [];
+        $http.get("http://localhost:8080/api/voucher/delete").then(function (response) {
+            $scope.listDelete = response.data;
+            console.log($scope.listDelete)
+        })
+
+    }
+
     $scope.loadAll();
+    $scope.loadAllPrepare();
+    $scope.loadAllStop();
+    $scope.loadAllDelete();
         $scope.check = function(){
             if(document.getElementById("giamphantram").checked == true){
                 document.getElementById("km1").style.display = "block";
@@ -55,6 +89,101 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
         }
     }
 
+    // pagation Prepare
+    $scope.pagerPrepare = {
+        page: 0,
+        size: 5,
+        get items() {
+            var start = this.page * this.size;
+            return $scope.listPrepare.slice(start, start + this.size);
+        },
+        get count() {
+            return Math.ceil(1.0 * $scope.listPrepare.length / this.size);
+        },
+
+        first() {
+            this.page = 0;
+        },
+        prev() {
+            this.page--;
+            if (this.page < 0) {
+                this.last();
+            }
+        },
+        next() {
+            this.page++;
+            if (this.page >= this.count) {
+                this.first();
+            }
+        },
+        last() {
+            this.page = this.count - 1;
+        }
+    }
+
+    // pagation Srop
+    $scope.pagerStop = {
+        page: 0,
+        size: 5,
+        get items() {
+            var start = this.page * this.size;
+            return $scope.listStop.slice(start, start + this.size);
+        },
+        get count() {
+            return Math.ceil(1.0 * $scope.listStop.length / this.size);
+        },
+
+        first() {
+            this.page = 0;
+        },
+        prev() {
+            this.page--;
+            if (this.page < 0) {
+                this.last();
+            }
+        },
+        next() {
+            this.page++;
+            if (this.page >= this.count) {
+                this.first();
+            }
+        },
+        last() {
+            this.page = this.count - 1;
+        }
+    }
+
+    // pagation Delete
+    $scope.pagerDelete = {
+        page: 0,
+        size: 5,
+        get items() {
+            var start = this.page * this.size;
+            return $scope.listDelete.slice(start, start + this.size);
+        },
+        get count() {
+            return Math.ceil(1.0 * $scope.listDelete.length / this.size);
+        },
+
+        first() {
+            this.page = 0;
+        },
+        prev() {
+            this.page--;
+            if (this.page < 0) {
+                this.last();
+            }
+        },
+        next() {
+            this.page++;
+            if (this.page >= this.count) {
+                this.first();
+            }
+        },
+        last() {
+            this.page = this.count - 1;
+        }
+    }
     $scope.form = {
         code: '',
         name: '',
@@ -69,7 +198,18 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
 
     //add
     $scope.add = function(){
-        console.log($scope.form.isVoucher)
+        if (!$scope.form.code || !$scope.form.name || !$scope.form.typeVoucher ||
+            !$scope.form.isVoucher || !$scope.form.discount || !$scope.form.cash ||
+            !$scope.form.startdate  ) {
+            Swal.fire("Vui lòng điền đầy đủ thông tin cho tất cả các trường!", "", "error");
+            return false;
+        }
+        
+        if (startDate >= endDate) {
+            Swal.fire("Ngày Bắt Đầu Phải Nhỏ Hơn Ngày Kết Thúc", "", "error");
+            return false; // Ngăn chặn sự kiện hoặc thực hiện các hành động phù hợp khác
+        }
+
         
         $http.post(url,{
             code : $scope.form.code,
@@ -102,6 +242,10 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
         var startDate  = document.getElementById("ngaybatdau").value;
         var endDate  = document.getElementById("ngayhethan").value;
         let id = $routeParams.id;
+        if (startDate >= endDate) {
+            Swal.fire("Ngày Bắt Đầu Phải Nhỏ Hơn Ngày Kết Thúc", "", "error");
+            return false; // Ngăn chặn sự kiện hoặc thực hiện các hành động phù hợp khác
+        }
         if( $scope.form.typeVoucher==true){
             $scope.form.cash = null;
         }else{
