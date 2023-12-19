@@ -172,9 +172,9 @@ window.KhachHangController = function ($scope, $http, $location, $routeParams) {
                 .put("http://localhost:8080/api/customer/deletefake/" + id)
                 .then(function (response) {
                   Swal.fire(
-                    "Không thể xóa! Đã chuyển sang ngừng hoạt động",
+                    " Đã chuyển sang ngừng hoạt động",
                     "",
-                    "error"
+                    "success"
                   );
                   $scope.loadAll();
                   $http

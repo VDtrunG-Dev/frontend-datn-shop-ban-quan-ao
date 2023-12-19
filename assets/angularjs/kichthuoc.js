@@ -100,7 +100,7 @@ window.KichThuocController = function ($scope, $http, $location, $routeParams) {
             // Xử lý lỗi khi gọi API delete
             $http.put("http://localhost:8080/api/size/deletefake/" + id)
               .then(function (response) {
-                Swal.fire('Không thể xóa danh mục! Đã chuyển ngừng hoạt động', '', 'error')
+                Swal.fire(' Đã chuyển ngừng hoạt động', '', 'error')
                 $scope.loadAll();
                 $http.get("http://localhost:8080/api/size/stopworking").then(function (response) {
                   $scope.listStop = response.data;

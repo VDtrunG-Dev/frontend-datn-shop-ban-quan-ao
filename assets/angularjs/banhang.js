@@ -724,7 +724,11 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
   $scope.deleteBillDetail = function (id) {
 
     Swal.fire({
-      title: 'Bạn có chắc muốn xóa giỏ hàng ?',
+      title: 'Bạn có  muốn  xóa sản phẩm           khỏi giỏ hàng ?',
+
+
+
+
       showCancelButton: true,
       confirmButtonText: 'Xóa',
     }).then((result) => {

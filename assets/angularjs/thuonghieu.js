@@ -109,9 +109,9 @@ $scope.pagerStop = {
               .put("http://localhost:8080/api/brand/deletefake/" + id)
               .then(function (response) {
                 Swal.fire(
-                  "Không thể xóa! Đã chuyển sang ngừng hoạt động",
+                  " Đã chuyển sang ngừng hoạt động",
                   "",
-                  "error"
+                  "success"
                 );
                 $scope.loadAll();
                 $http

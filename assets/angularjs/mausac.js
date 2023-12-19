@@ -94,9 +94,9 @@ window.MauSacController = function ($scope, $http, $location, $routeParams) {
               .put("http://localhost:8080/api/color/deletefake/" + id)
               .then(function (response) {
                 Swal.fire(
-                  "Không thể xóa danh mục! Đã chuyển ngừng hoạt động",
+                  " Đã chuyển ngừng hoạt động",
                   "",
-                  "error"
+                  "success"
                 );
                 $scope.loadAll();
                 $http
