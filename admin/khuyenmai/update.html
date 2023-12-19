@@ -24,11 +24,10 @@
                 <div class="col-md-6"  style="margin-top: 15px;" >
                     <label>Loại khuyến mãi <span class="vaid">*</span></label>
                     <div class=" custom-radio">
-                        <h3>{{form.typeVoucher}}</h3>
                         <input type="radio" ng-value="false" ng-model="form.isVoucher" id="giamtheobill" ng-checked="form.isVoucher === 'false'" />
                         <label for="giamtheobill">Giảm giá theo tổng bill</label>
-                        <input type="radio" ng-value="true" ng-model="form.isVoucher" id="giamsanpham"  ng-checked="form.isVoucher === 'true'" />
-                        <label for="giamsanpham">Giảm giá theo từng sản phẩm</label>
+                        <!-- <input type="radio" ng-value="true" ng-model="form.isVoucher" id="giamsanpham"  ng-checked="form.isVoucher === 'true'" />
+                        <label for="giamsanpham">Giảm giá theo từng sản phẩm</label> -->
                     </div>
                     <div ng-repeat="err in validationErrors">
                         <span class="validate" ng-if="err.objectName == 'voucherRequest' && err.field == 'isVoucher'">
