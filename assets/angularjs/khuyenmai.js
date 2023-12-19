@@ -198,12 +198,7 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
 
     //add
     $scope.add = function(){
-        if (!$scope.form.code || !$scope.form.name || !$scope.form.typeVoucher ||
-            !$scope.form.isVoucher || !$scope.form.discount || !$scope.form.cash ||
-            !$scope.form.startdate  ) {
-            Swal.fire("Vui lòng điền đầy đủ thông tin cho tất cả các trường!", "", "error");
-            return false;
-        }
+       
         
         if (startDate >= endDate) {
             Swal.fire("Ngày Bắt Đầu Phải Nhỏ Hơn Ngày Kết Thúc", "", "error");
