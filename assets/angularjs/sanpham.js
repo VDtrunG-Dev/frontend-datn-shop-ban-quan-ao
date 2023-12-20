@@ -54,6 +54,7 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
         $scope.listMaterial = [];
         $http.get(urlmaterial).then(function (response) {
             $scope.listMaterial = response.data;
+            // console.log($scope.listMaterial);
         })
         // load color
         $scope.listColor = [];
@@ -1523,6 +1524,7 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
     }
 
     $scope.themChatLieu = function () {
+        // Swal.fire("Tên màu sắc đã tồn tại!", "", "error");
         $scope.isMaterial = !$scope.isMaterial;
 
     }
@@ -1789,7 +1791,14 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
     }
     //add category
     $scope.addDanhMuc = function () {
-
+        var isDuplicate = $scope.listCategory.some(function (category) {
+            return category.name === $scope.danhmucname;
+          });
+          // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+          if (isDuplicate) {
+            Swal.fire("Tên danh mục đã tồn tại!", "", "error");
+            return;
+          }
         $http.post(urlcategory, {
             name: $scope.danhmucname,
             description: $scope.danhmucdescription
@@ -1813,7 +1822,14 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
 
     //add brand
     $scope.addThuongHieu = function () {
-
+        var isDuplicate = $scope.listBrand.some(function (brand) {
+            return brand.name === $scope.thuonghieuname;
+          });
+          // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+          if (isDuplicate) {
+            Swal.fire("Tên thương hiệu đã tồn tại!", "", "error");
+            return;
+          }
         $http.post(urlbrand, {
             name: $scope.thuonghieuname,
             description: $scope.thuonghieudescription
@@ -1837,6 +1853,14 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
 
     //add material
     $scope.addChatLieu = function () {
+        var isDuplicate = $scope.listMaterial.some(function (material) {
+            return material.name === $scope.materialname;
+          });
+          // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+          if (isDuplicate) {
+            Swal.fire("Tên chất liệu đã tồn tại!", "", "error");
+            return;
+          }
 
         $http.post(urlmaterial, {
             name: $scope.materialname,
@@ -1860,7 +1884,6 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
     }
     //add material
     $scope.addChatLieu1 = function () {
-
         $http.post(urlmaterial, {
             name: $scope.materialname,
             description: $scope.materialdescription
@@ -1896,7 +1919,14 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
 
     //add colro
     $scope.addMauSac = function () {
-
+        var isDuplicate = $scope.listColor.some(function (color) {
+            return color.name === $scope.colorname;
+          });
+          // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+          if (isDuplicate) {
+            Swal.fire("Tên màu sắc đã tồn tại!", "", "error");
+            return;
+          }
         $http.post(urlcolor, {
             name: $scope.colorname,
             description: $scope.colordescription
@@ -1959,7 +1989,14 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
     }
     //add size
     $scope.addKichThuoc = function () {
-
+        var isDuplicate = $scope.listSize.some(function (size) {
+            return size.name === $scope.sizename;
+          });
+          // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+          if (isDuplicate) {
+            Swal.fire("Tên kích thước đã tồn tại!", "", "error");
+            return;
+          }
         $http.post(urlsize, {
             name: $scope.sizename,
             description: $scope.sizedescription

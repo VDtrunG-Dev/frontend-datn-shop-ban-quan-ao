@@ -23,6 +23,14 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
     })
     //add category
     $scope.add = function(){
+        var isDuplicate = $scope.list.some(function (category) {
+            return category.name === $scope.form.name;
+          });
+          // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+          if (isDuplicate) {
+            Swal.fire("Tên danh mục đã tồn tại!", "", "error");
+            return;
+          }
         $http.post(urlcategory,{
             name : $scope.form.name,
             description : $scope.form.description

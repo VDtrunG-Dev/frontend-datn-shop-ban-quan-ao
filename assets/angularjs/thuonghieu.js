@@ -131,6 +131,14 @@ $scope.pagerStop = {
   };
     //add brand
     $scope.add = function(){
+      var isDuplicate = $scope.list.some(function (brand) {
+        return brand.name === $scope.form.name;
+      });
+      // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+      if (isDuplicate) {
+        Swal.fire("Tên thương hiệu đã tồn tại!", "", "error");
+        return;
+      }
         $http.post(url,{
             name : $scope.form.name,
             description : $scope.form.description
