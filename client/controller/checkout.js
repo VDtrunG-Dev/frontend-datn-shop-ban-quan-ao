@@ -9,10 +9,65 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
   //trang thanh toán
 
   $scope.checkOut = function () {
-
     let IdCustomer = AuthService.getCustomer();
     let urlcolor = "http://localhost:8080/api/color";
     let urlsize = "http://localhost:8080/api/size";
+
+    $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
+        $scope.listCart = cart.data;
+    
+        // Create an array of promises for each API call
+        let promises = $scope.listCart.map(function (cartItem) {
+          return $http({
+            method: "GET",
+            url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
+            params: {
+              IdProduct: cartItem.productDetail.id,
+              IdColor: cartItem.idColor,
+              IdSize: cartItem.idSize,
+            },
+          });
+        });
+    
+        // Wait for all promises to resolve
+        Promise.all(promises).then(function (responses) {
+          let hasError = false;
+          let indexError = -1;
+    
+          responses.forEach(function (resp, index) {
+            let quantityProduct = $scope.listCart[index].quantity;
+            let quantityAvailable = resp.data;
+    
+            if (quantityProduct > quantityAvailable) {
+              hasError = true;
+              $scope.quantityError = quantityAvailable;
+              indexError = index;
+            }
+          });
+    
+          if (hasError) {
+            Swal.fire(
+              'Sản Phẩm ' +
+                $scope.listCart[indexError].productDetail.product.name +
+                ' Chỉ Còn ' +
+                $scope.quantityError +
+                ' Sản Phẩm ',
+              '',
+              'error'
+            );
+            $scope.check = true;
+            location.href = "#/cart";
+          } else {
+            // No errors, proceed to checkout
+            $scope.listCartCheck = $scope.listCart;
+            if ($scope.listCartCheck.length === 0) {
+              Swal.fire('Giỏ hàng của bạn đang rỗng !', '', 'error');
+            } 
+          }
+        });
+      });
+
+
     // load color
     $scope.listColor = [];
     $http.get(urlcolor).then(function (response) {
@@ -37,19 +92,19 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
           $scope.sendBillToMail($location.search().vnp_OrderInfo);
         })
         let amount = parseInt($location.search().vnp_Amount) / 100;
-          // Kiểm tra biến kiểm soát trước khi gọi hàm
+        // Kiểm tra biến kiểm soát trước khi gọi hàm
 
 
 
         Swal.fire(
           "Thanh toán thành công !",
           "Bạn đã thanh toán thành công số tiền " +
-            amount.toLocaleString("vi-VN", {
-              style: "currency",
-              currency: "VND",
-            }) +
-            "<br> cho đơn hàng : " +
-            $location.search().vnp_OrderInfo,
+          amount.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }) +
+          "<br> cho đơn hàng : " +
+          $location.search().vnp_OrderInfo,
           "success"
         );
         location.href = "#/myorder";
@@ -556,7 +611,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
 
           //thay đổi địa chỉ giao hàng
           $scope.changeAddress = function () {
-             idAddress = document.getElementById("idAddress").value;
+            idAddress = document.getElementById("idAddress").value;
             console.log(idAddress + "Hoàng")
             //load cart by user
             $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {

@@ -191,6 +191,14 @@ window.KichThuocController = function ($scope, $http, $location, $routeParams) {
   }
   // add size
   $scope.add = function () {
+    var isDuplicate = $scope.list.some(function (size) {
+      return size.name === $scope.form.name;
+    });
+    // Nếu tên màu đã tồn tại, hiển thị thông báo lỗi và thoát khỏi hàm
+    if (isDuplicate) {
+      Swal.fire("Tên kích thước đã tồn tại!", "", "error");
+      return;
+    }
     $http
       .post(url, {
         name: $scope.form.name,

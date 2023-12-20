@@ -417,6 +417,8 @@ window.HoaDonController = function (
 
   $scope.calculateRollbackStatus = function (currentStatus) {
     switch (currentStatus) {
+      case 4:
+        return 3;
       case 3:
         return 2;
       case 2:

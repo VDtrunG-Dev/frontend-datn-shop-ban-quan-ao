@@ -2455,6 +2455,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
     $http.get('http://localhost:8080/api/product/getAllVoucherByMinimun/' + $scope.tongTien).then(function (resp) {
       $scope.listVoucher = resp.data;
     })
+    console.log($scope.listVoucher)
     $http.get('http://localhost:8080/api/voucher/getVoucherTop/' + $scope.tongTien).then(function (resp) {
     $scope.voucher = resp.data
     if ($scope.voucher.isVoucher === false) {
@@ -2480,6 +2481,7 @@ window.BanHangController = function ($scope, $http, $location, $routeParams, $ro
       $scope.tienThanhToan = $scope.tongTien - $scope.giamGia;
     }
 
+    console.log($scope.voucher)
   
   });
   
