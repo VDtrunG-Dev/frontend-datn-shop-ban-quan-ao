@@ -218,7 +218,9 @@
           </div>
           <div id="chuongtrinhkhuyenmai" style="display: block;">
             <select class="input-group-text" style="width: 230px;height: 40px; float: left;" id="ctkm" >
-              <option ng-repeat="km in listVoucher" value="{{km.code}}">{{km.code}} - {{km.name}} | Áp dụng cho {{km.typeVoucher != true ? 'Sản phẩm' : 'Hóa đơn'}}  </option>
+              <option ng-repeat="km in listVoucher" value="{{km.code}}">
+                {{km.code}} {{km.typeVoucher ? ' | Phần trăm giảm ' + km.discount + '%' : ' | Số tiền giảm ' + km.cash + 'VND'}}
+              </option>
             </select>
           <button style="padding: 5px;" class="btn btn-dark" ng-click="apCTKM()">Áp dụng</button>
           </div>

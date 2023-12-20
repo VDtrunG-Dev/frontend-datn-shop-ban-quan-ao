@@ -188,7 +188,7 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
         code: '',
         name: '',
         typeVoucher: '',
-        isVoucher:'',
+        isVoucher:false,
         discount:'',
         cash:'',
         startdate:'',
@@ -198,6 +198,7 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
 
     //add
     $scope.add = function(){
+
 
         if($scope.form.code == '' ){
             Swal.fire("Mã không được để trống", "", "error");
