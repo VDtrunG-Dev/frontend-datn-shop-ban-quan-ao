@@ -438,12 +438,6 @@ window.DetailController = function ($http, $scope, $routeParams, $location, $roo
 
 
                   $scope.listCart = cart.data;
-                //   $scope.totalQuantity = cart.data.quantity + soLuong
-                //  if( > $scope.quantity){
-                //   Swal.fire("Số lượng bạn thêm và số lượng có trong giỏ hàng vượt quá số lượng còn hàng!!", "", "error");
-                //   document.getElementById("Quantity").value = 1;
-                //   return;
-                //  }
                 // add to cart
                 console.log($scope.listCart)
                 if ($scope.listCart.length === 0) {
