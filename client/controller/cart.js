@@ -601,12 +601,13 @@ window.CartController = function ($http, $scope, $rootScope, AuthService, CartSe
             $scope.quantity = resp.data;
             if ($scope.quantityProduct > $scope.quantity) {
               hasError = true;
+              $scope.quantityError = resp.data;
               indexError = i;
             }
     
             if (i === $scope.listCart.length - 1) {
               if (hasError) {
-                Swal.fire('Sản Phẩm  ' + $scope.listCart[indexError].productDetail.product.name + ' Chỉ Còn  ' + $scope.listCart[indexError].quantity + " Sản Phẩm ", '', 'error');
+                Swal.fire('Sản Phẩm  ' + $scope.listCart[indexError].productDetail.product.name + ' Chỉ Còn  ' + $scope.quantityError  + " Sản Phẩm ", '', 'error');
                 location.href = "#/cart";
               } else {
                 $scope.listCartCheck = [];

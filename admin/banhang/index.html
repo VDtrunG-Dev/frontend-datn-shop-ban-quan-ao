@@ -258,10 +258,10 @@
               
           </div>
       </div>
-        <div>Tổng tiền : <input style="width: 250px;" class="input-group-text" value="{{tongTien}}"></div>
-        <div id="muaonline1" style="display: none;">Phí ship : <input style="width: 250px;" class="input-group-text" value="{{phiShip}}"></div>
-        <div>Giảm giá : <input value="{{giamGia}}" style="width: 250px;" class="input-group-text"></div>
-        <div>Tổng tiền cần thanh toán : <input style="width: 250px;" class="input-group-text" value="{{tienThanhToan}}"></div>
+        <div>Tổng tiền : <input style="width: 250px;" class="input-group-text" value="{{tongTien | currency:'':0}}"></div>
+        <div id="muaonline1" style="display: none;">Phí ship : <input style="width: 250px;" class="input-group-text" value="{{phiShip | currency:'':0}}"></div>
+        <div>Giảm giá : <input value="{{giamGia | currency:'':0}}" style="width: 250px;" class="input-group-text"></div>
+        <div>Tổng tiền cần thanh toán : <input style="width: 250px;" class="input-group-text" value="{{tienThanhToan | currency:'':0}}"></div>
        
       <div style="padding-top: 10px;">
         <button ng-click="huyhoadon(hoadon.code)" class="btn btn-dark"><i class="fa-solid fa-ban"></i> Hủy</button>

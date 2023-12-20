@@ -10,7 +10,6 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
         $scope.list = [];
         $http.get(url).then(function (response) {
             $scope.list = response.data;
-            console.log($scope.list)
            
         })
         $scope.getQuantity = function (sp) {
@@ -54,6 +53,7 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
         $scope.listMaterial = [];
         $http.get(urlmaterial).then(function (response) {
             $scope.listMaterial = response.data;
+            console.log($scope.listMaterial)
         })
         // load color
         $scope.listColor = [];
@@ -646,7 +646,7 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
             }
         })
     }
-
+ 
 
     //detail product
     $scope.detail = function () {
@@ -919,7 +919,6 @@ window.SanPhamController = function ($scope, $http, $location, $routeParams, $ro
                         $http.delete("http://localhost:8080/api/productdetail_material/" + id);
                         $http.delete("http://localhost:8080/api/productdetail_color_size/" + id)
                         // update product detail
-                        console.log($scope.form.status)
                         $http.put("http://localhost:8080/api/product/update/" + id, {
                             price: $scope.form.price,
                             weight: $scope.form.weight,
