@@ -274,8 +274,7 @@
                     {{cart.unitPrice * cart.quantity | currency:'':0}} VNĐ
                 </td>
                 <td ng-if="bill.status == 0 || bill.status == 1"><button style="border: none;color: red;" ng-click="deleteBillDetail(cart.id,bill.id)"><i class="fa-solid fa-trash-can"></i></button></td>
-                <td ng-if="bill.status == 3"><button ng-click="doihang(cart.productDetail.id)" class="button-bill2"><i class="fa-solid fa-right-left"></i> Đổi hàng</button></td>
-
+               
         </tr>
        
        

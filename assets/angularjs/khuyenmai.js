@@ -187,7 +187,7 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
     $scope.form = {
         code: '',
         name: '',
-        typeVoucher:'',
+        typeVoucher: '',
         isVoucher:'',
         discount:'',
         cash:'',
@@ -196,7 +196,52 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
         minimum:'',
     }
 
+    //add
     $scope.add = function(){
+
+        if($scope.form.code == '' ){
+            Swal.fire("Mã không được để trống", "", "error");
+            return false;
+        }
+       
+
+        if($scope.form.name == '' ){
+            Swal.fire("Tên không được để trống", "", "error");
+            return false;
+        }
+
+        if(document.getElementById("giamphantram").checked == true){
+            if($scope.form.discount == null ){
+                Swal.fire("Phần trăm khuyến mãi không được để trống", "", "error");
+                return false;
+            }
+            if($scope.form.discount < 1 ||  $scope.form.discount > 99 ){
+                Swal.fire("Gía trị khuyến mãi phải nằm trong khoảng [1-99]", "", "error");
+                return false;
+            }
+        }else{
+            if($scope.form.cash == null ){
+                Swal.fire("Giá trị tiền mặt khuyến mãi không được để trống", "", "error");
+                return false;
+            }
+            if($scope.form.cash < 1  ){
+                Swal.fire("Gía trị khuyến mãi tiền mặt phải lớn hơn 1", "", "error");
+                return false;
+            }
+        }
+
+
+        if($scope.form.minimum == '' ){
+            Swal.fire("Giá trị hóa đơn được áp dụng không được để trống", "", "error");
+            return false;
+        }
+
+        if($scope.form.minimum < 1  ){
+            Swal.fire("Giá trị hóa đơn được áp dụng phải lớn hơn 1", "", "error");
+            return false;
+        }
+
+        
         if ($scope.form.startdate >= $scope.form.enddate) {
             Swal.fire("Ngày Bắt Đầu Phải Nhỏ Hơn Ngày Kết Thúc", "", "error");
             return false; // Ngăn chặn sự kiện hoặc thực hiện các hành động phù hợp khác
@@ -231,23 +276,79 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
 
     //update 
     $scope.update = function(){
+
+     
+
         var startDate  = document.getElementById("ngaybatdau").value;
         var endDate  = document.getElementById("ngayhethan").value;
+        
         let id = $routeParams.id;
+
+        // if(document.getElementById("giamphantram").checked == true){
+        //     if($scope.form.discount == null ){
+        //         Swal.fire("Phần trăm khuyến mãi không được để trống", "", "error");
+        //         return false;
+        //     }
+        //     if($scope.form.discount < 1 ||  $scope.form.discount > 99 ){
+        //         Swal.fire("Gía trị khuyến mãi phải nằm trong khoảng [1-99]", "", "error");
+        //         return false;
+        //     }
+        // }else{
+        //     if($scope.form.cash == null ){
+        //         Swal.fire("Giá trị tiền mặt khuyến mãi không được để trống", "", "error");
+        //         return false;
+        //     }
+        //     if($scope.form.cash < 1  ){
+        //         Swal.fire("Gía trị khuyến mãi tiền mặt phải lớn hơn 1", "", "error");
+        //         return false;
+        //     }
+        // }
+
+
+       
         if (startDate >= endDate) {
             Swal.fire("Ngày Bắt Đầu Phải Nhỏ Hơn Ngày Kết Thúc", "", "error");
             return false; // Ngăn chặn sự kiện hoặc thực hiện các hành động phù hợp khác
         }
         if( $scope.form.typeVoucher==true){
+            if($scope.form.discount == null ){
+                Swal.fire("Phần trăm khuyến mãi không được để trống", "", "error");
+                return false;
+            }
+            if($scope.form.discount < 1 ||  $scope.form.discount > 99 ){
+                Swal.fire("Gía trị khuyến mãi phải nằm trong khoảng [1-99]", "", "error");
+                return false;
+            }
             $scope.form.cash = null;
         }else{
+            if($scope.form.cash == null ){
+                Swal.fire("Giá trị tiền mặt khuyến mãi không được để trống", "", "error");
+                return false;
+            }
+            if($scope.form.cash < 1  ){
+                Swal.fire("Gía trị khuyến mãi tiền mặt phải lớn hơn 1", "", "error");
+                return false;
+            }
             $scope.form.discount = null;
         }
+
+        
+        if($scope.form.minimum == null ){
+            Swal.fire("Giá trị hóa đơn được áp dụng không được để trống", "", "error");
+            return false;
+        }
+
+        if($scope.form.minimum < 1  ){
+            Swal.fire("Giá trị hóa đơn được áp dụng phải lớn hơn 1", "", "error");
+            return false;
+        }
+
         
         $http.put("http://localhost:8080/api/voucher/update/"+id,{
             code : $scope.form.code,
             name : $scope.form.name,
             typeVoucher : $scope.form.typeVoucher,
+
             isVoucher : $scope.form.isVoucher,
             discount : $scope.form.discount,
             cash : $scope.form.cash,

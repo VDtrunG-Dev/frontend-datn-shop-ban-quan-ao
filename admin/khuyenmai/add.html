@@ -1,5 +1,3 @@
-
-
 <div style="float: right;">
     <input type="file" id="fileInput" style="display: none">
     <button class="btn btn-success" ng-click="importExel()"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
@@ -43,12 +41,9 @@
                 <div class="col-md-6"  style="margin-top: 15px;" >
                     <label>Loại khuyến mãi <span class="vaid">*</span></label>
                     <div class=" custom-radio">
-                        <input type="radio" value="false" ng-model="form.isVoucher" checked id="giamtheobill" ng-click="appear()" />
-                        <label for="giamtheobill">Giảm giá theo tổng bill</label>
-                        <br>
-                        <div class=" custom-radio" style="display: none;" id="123" >
-                            <br>
-                            <input  type="radio" value="true" ng-model="form.typeVoucher" id="giamphantram" checked />
+                        <!-- <input type="radio"  value="false" ng-model="form.isVoucher" checked="checked" id="giamtheobill" ng-click="appear()" /> -->
+                        <div class=" custom-radio" style="display: block;"  id="123" >
+                            <input  type="radio" value="true" ng-model="form.typeVoucher" id="giamphantram" checked="true" />
                             <label ng-click="check()" for="giamphantram">Giảm giá theo %</label>
                             <input  type="radio" value="false" ng-model="form.typeVoucher" id="giamtienmat" />
                             <label ng-click="check()" for="giamtienmat">Giảm giá theo tiền mặt</label>
@@ -108,7 +103,7 @@
                 <div class="col-md-6" style="margin-top: 30px; display: none;" id="km">
                     <label>Khuyến mãi theo % <span class="vaid">*</span></label> 
 
-                    <input class="haninput" ng-model="form.discount" >
+                    <input class="haninput" ng-model="form.discount" type="number" >
                     <div ng-repeat="err in validationErrors">
                         <span class="validate" ng-if="err.objectName == 'voucherRequest' && err.field == 'Discount'">
                             {{err.defaultMessage}}
@@ -117,7 +112,7 @@
                 </div>
                 <div class="col-md-6" style="margin-top: 30px;  display: none; " id="km1">
                     <label>Khuyến mãi theo tiền <span class="vaid">*</span></label> 
-                    <input  class="haninput" ng-model="form.cash">
+                    <input  class="haninput" ng-model="form.cash"  type="number">
                     <div ng-repeat="err in validationErrors">
                         <span class="validate" ng-if="err.objectName == 'voucherRequest' && err.field == 'Cash'">
                             {{err.defaultMessage}}
@@ -170,4 +165,3 @@
     </div>
     </div>
 </form>
-
