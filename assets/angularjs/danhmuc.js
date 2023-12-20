@@ -87,7 +87,7 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
                     .catch(function(err){
                         $http.put("http://localhost:8080/api/category/deletefake/" + id)
                             .then(function(response){
-                                Swal.fire('Không thể xóa danh mục! Đã chuyển ngừng hoạt động', '', 'error')
+                                Swal.fire(' Đã chuyển ngừng hoạt động', '', 'success')
                                 $scope.loadAll();
                                 $http.get("http://localhost:8080/api/category/stopworking").then(function(response){
                                     $scope.categoryStops = response.data;

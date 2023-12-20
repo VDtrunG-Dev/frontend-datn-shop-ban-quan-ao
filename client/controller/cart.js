@@ -532,23 +532,100 @@ window.CartController = function ($http, $scope, $rootScope, AuthService, CartSe
 
 
     }
+    // $scope.checkCheckOut = function () {
+
+
+    //   $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
+    //     $scope.listCart = cart.data;
+    //   });
+
+    //   for(let i = 0; i < $scope.listCart.length; i++){
+    //     $scope.quantityProduct = $scope.listCart[i].quantity;
+    //     $scope.nameProduct = $scope.listCart[i].productDetail.product.name;
+    //     var params = {
+    //       IdProduct: $scope.listCart[i].productDetail.id,
+    //       IdColor: $scope.listCart[i].idColor,
+    //       IdSize: $scope.listCart[i].idSize,
+    //     };
+    //     $http({
+    //       method: "GET",
+    //       url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
+    //       params: params,
+    //     }).then(function (resp) {
+    //       $scope.quantity = resp.data;
+    //       if($scope.quantityProduct > $scope.quantity){
+    //         Swal.fire('Sản Phẩm  ' +  $scope.nameProduct + ' Chỉ Còn  ' + $scope.quantity + " Sản Phẩm " , '', 'error');
+    //         location.href = "#/cart";
+    //         return false;
+    //       }
+    //     });
+
+    //   }
+
+    //   // load cart by user
+    //   $scope.listCartCheck = [];
+    //   $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
+    //     $scope.listCartCheck = cart.data;
+    //     if ($scope.listCartCheck.length === 0) {
+    //       Swal.fire('Giỏ hàng của bạn đang rỗng !', '', 'error');
+    //       location.href = "#/cart";
+    //     }
+    //     else {
+    //       location.href = "#/checkout";
+    //     }
+
+    //   });
+    // }
+
     $scope.checkCheckOut = function () {
-      location.href = "#/checkout";
-      //load cart by user
-      // $scope.listCartCheck = [];
-      // $http.get("http://localhost:8080/api/cart/"+IdCustomer).then(function (cart) {
-      // $scope.listCartCheck = cart.data;
-      // if($scope.listCartCheck.length === 0){
-      //  Swal.fire('Giỏ hàng của bạn đang rỗng !','','error');
-      //  location.href = "#/cart";
-
-      // }
-      // else{
-      //  location.href = "#/checkout";
-      // }
-
-      // });
-    }
+      $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
+        $scope.listCart = cart.data;
+    
+        let hasError = false;
+        let indexError = -1;
+    
+        for (let i = 0; i < $scope.listCart.length; i++) {
+          $scope.quantityProduct = $scope.listCart[i].quantity;
+          $scope.nameProduct = $scope.listCart[i].productDetail.product.name;
+          var params = {
+            IdProduct: $scope.listCart[i].productDetail.id,
+            IdColor: $scope.listCart[i].idColor,
+            IdSize: $scope.listCart[i].idSize,
+          };
+    
+          $http({
+            method: "GET",
+            url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
+            params: params,
+          }).then(function (resp) {
+            $scope.quantity = resp.data;
+            if ($scope.quantityProduct > $scope.quantity) {
+              hasError = true;
+              indexError = i;
+            }
+    
+            if (i === $scope.listCart.length - 1) {
+              if (hasError) {
+                Swal.fire('Sản Phẩm  ' + $scope.listCart[indexError].productDetail.product.name + ' Chỉ Còn  ' + $scope.listCart[indexError].quantity + " Sản Phẩm ", '', 'error');
+                location.href = "#/cart";
+              } else {
+                $scope.listCartCheck = [];
+                $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
+                  $scope.listCartCheck = cart.data;
+                  if ($scope.listCartCheck.length === 0) {
+                    Swal.fire('Giỏ hàng của bạn đang rỗng !', '', 'error');
+                    location.href = "#/cart";
+                  } else {
+                    location.href = "#/checkout";
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    };
+    
 
   };
   $scope.loadCart();

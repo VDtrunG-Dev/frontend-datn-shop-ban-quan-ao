@@ -110,9 +110,9 @@ window.ChatLieuController = function ($scope, $http, $location, $routeParams) {
               .put("http://localhost:8080/api/material/deletefake/" + id)
               .then(function (response) {
                 Swal.fire(
-                  "Không thể xóa! Đã chuyển sang ngừng hoạt động",
+                  " Đã chuyển sang ngừng hoạt động",
                   "",
-                  "error"
+                  "success"
                 );
                 $scope.loadAll();
                 $http

@@ -1,13 +1,13 @@
-window.DetailController = function ($http, $scope, $routeParams, $location,$rootScope,AuthService,CartService) {
-    $scope.detail = function () {
-      
-      let IdCustomer = AuthService.getCustomer();
-      console.log(IdCustomer);
-      var selectedVal = "";
-      var selectedVal1 = "";
-        let urlcolor = "http://localhost:8080/api/color";
-        let urlsize = "http://localhost:8080/api/size";
-         // load color
+window.DetailController = function ($http, $scope, $routeParams, $location, $rootScope, AuthService, CartService) {
+  $scope.detail = function () {
+
+    let IdCustomer = AuthService.getCustomer();
+    console.log(IdCustomer);
+    var selectedVal = "";
+    var selectedVal1 = "";
+    let urlcolor = "http://localhost:8080/api/color";
+    let urlsize = "http://localhost:8080/api/size";
+    // load color
     $scope.listColor = [];
     $http.get(urlcolor).then(function (response) {
       $scope.listColor = response.data;
@@ -17,88 +17,88 @@ window.DetailController = function ($http, $scope, $routeParams, $location,$root
     $http.get(urlsize).then(function (response) {
       $scope.listSize = response.data;
     });
-    
-        let id = $routeParams.id;
-        $scope.danhgia = function(){
-          let score = document.getElementById('star5').checked == true ? 5 : document.getElementById('star4').checked == true ? 4 : document.getElementById('star3').checked == true ? 3 : document.getElementById('star2').checked == true ? 2 : document.getElementById('star1').checked == true ? 1 : null;
-         
-      
-          let review = document.getElementById('review').value;
-          if(score == null){
-            Swal.fire("Vui lòng chọn sao đánh giá","","error");
-            return;
-          }
-          if(review == ''){
-            Swal.fire("Nội dung đánh giá không được bỏ trống","","error");
-            return;
-          }
-          $http.post("http://localhost:8080/api/rating",{
-            score : score,
-            note : review,
-            idProductDetail : id,
-            idCustomer : IdCustomer
-          }).then(function(resp){
-            var ListImage = $scope.imagesList;
-            if (ListImage.length > 0){
-                var img1 = new FormData();
-                for (let i = 0; i < ListImage.length; i++) {
-                    img1.append("files",ListImage[i]);
-                    $http.post("http://localhost:8080/api/upload",img1,{
-                        transformRequest: angular.identity,
-                        headers: {
-                            'Content-Type': undefined
-                        }
-                    }).then(function (imagelist){
-                        $http.post("http://localhost:8080/api/ratingimage",{
-                            url : imagelist.data[i],
-                            idRating : resp.data.id
-                        });
-                    })
-                }
 
-            }
+    let id = $routeParams.id;
+    $scope.danhgia = function () {
+      let score = document.getElementById('star5').checked == true ? 5 : document.getElementById('star4').checked == true ? 4 : document.getElementById('star3').checked == true ? 3 : document.getElementById('star2').checked == true ? 2 : document.getElementById('star1').checked == true ? 1 : null;
 
-          
-            Swal.fire("Đánh giá thành công","","success");
-            setTimeout(() => {
-              location.reload();
-          }, 2500);
-          })
-      
-      
+
+      let review = document.getElementById('review').value;
+      if (score == null) {
+        Swal.fire("Vui lòng chọn sao đánh giá", "", "error");
+        return;
+      }
+      if (review == '') {
+        Swal.fire("Nội dung đánh giá không được bỏ trống", "", "error");
+        return;
+      }
+      $http.post("http://localhost:8080/api/rating", {
+        score: score,
+        note: review,
+        idProductDetail: id,
+        idCustomer: IdCustomer
+      }).then(function (resp) {
+        var ListImage = $scope.imagesList;
+        if (ListImage.length > 0) {
+          var img1 = new FormData();
+          for (let i = 0; i < ListImage.length; i++) {
+            img1.append("files", ListImage[i]);
+            $http.post("http://localhost:8080/api/upload", img1, {
+              transformRequest: angular.identity,
+              headers: {
+                'Content-Type': undefined
+              }
+            }).then(function (imagelist) {
+              $http.post("http://localhost:8080/api/ratingimage", {
+                url: imagelist.data[i],
+                idRating: resp.data.id
+              });
+            })
+          }
+
         }
-        $scope.images = [];
-$scope.imagesList = [];
-let check = 0;
-$scope.openImage = function() {
-    check++;
-    if(check === 1){
-        $scope.change();
+
+
+        Swal.fire("Đánh giá thành công", "", "success");
+        setTimeout(() => {
+          location.reload();
+        }, 2500);
+      })
+
+
     }
-  document.getElementById('fileList').click();
+    $scope.images = [];
+    $scope.imagesList = [];
+    let check = 0;
+    $scope.openImage = function () {
+      check++;
+      if (check === 1) {
+        $scope.change();
+      }
+      document.getElementById('fileList').click();
 
-  
-};
+
+    };
 
 
-$scope.change = function(){
-    document.getElementById('fileList').addEventListener('change', function() {
+    $scope.change = function () {
+      document.getElementById('fileList').addEventListener('change', function () {
         console.log($scope.imagesList.length);
         var files = this.files;
-        if(files.length > 3) {
-          Swal.fire("Danh sách tối đa 3 ảnh !","","error");
+        if (files.length > 3) {
+          Swal.fire("Danh sách tối đa 3 ảnh !", "", "error");
           return;
         }
-        if($scope.images.length >= 3){
-          Swal.fire("Danh sách tối đa 3 ảnh !","","error");
+        if ($scope.images.length >= 3) {
+          Swal.fire("Danh sách tối đa 3 ảnh !", "", "error");
           return;
         }
         for (var i = 0; i < files.length; i++) {
           var file = files[i];
           if (file.type.startsWith('image/')) {
             var reader = new FileReader();
-            reader.onload = function(e) {
-              $scope.$apply(function() {
+            reader.onload = function (e) {
+              $scope.$apply(function () {
                 $scope.images.push(e.target.result);
               });
             };
@@ -107,251 +107,147 @@ $scope.change = function(){
           }
         }
       });
-}
-$scope.openModal = function(imageUrl) {
-  var modal = document.getElementById("myModal");
-    var modalImg = document.getElementById("modalImg");
-    modal.style.display = "block";
-    modalImg.src = imageUrl;
+    }
+    $scope.openModal = function (imageUrl) {
+      var modal = document.getElementById("myModal");
+      var modalImg = document.getElementById("modalImg");
+      modal.style.display = "block";
+      modalImg.src = imageUrl;
 
-}
+    }
 
-$scope.imageDelete = [];
-$scope.deleteImage = function(index) {
-    
-    var deletedItem =$scope.images.splice(index, 1);
-  $scope.imageDelete.push(deletedItem[0]);
-};
-        $scope.dkdanhgia = false;
-        $scope.sp = {};
-        $scope.listCungLoai = [];
-        $http
-          .get("http://localhost:8080/api/product/" + id)
-          .then(function (response) {
-            $scope.sp = response.data;
-               // pagation
-           $scope.pagerRating = {
-            page: 0,
-            size: 10,
-            get items() {
-                var start = this.page * this.size;
-                return response.data.ratings.slice(start, start + this.size);
-            },
-            get count() {
-                return Math.ceil(1.0 * response.data.ratings.length / this.size);
-            },
+    $scope.imageDelete = [];
+    $scope.deleteImage = function (index) {
 
-            first() {
-                this.page = 0;
-            },
-            prev() {
-                this.page--;
-                if (this.page < 0) {
-                    this.last();
-                }
-            },
-            next() {
-                this.page++;
-                if (this.page >= this.count) {
-                    this.first();
-                }
-            },
-            last() {
-                this.page = this.count - 1;
+      var deletedItem = $scope.images.splice(index, 1);
+      $scope.imageDelete.push(deletedItem[0]);
+    };
+    $scope.dkdanhgia = false;
+    $scope.sp = {};
+    $scope.listCungLoai = [];
+    $http
+      .get("http://localhost:8080/api/product/" + id)
+      .then(function (response) {
+        $scope.sp = response.data;
+        // pagation
+        $scope.pagerRating = {
+          page: 0,
+          size: 10,
+          get items() {
+            var start = this.page * this.size;
+            return response.data.ratings.slice(start, start + this.size);
+          },
+          get count() {
+            return Math.ceil(1.0 * response.data.ratings.length / this.size);
+          },
+
+          first() {
+            this.page = 0;
+          },
+          prev() {
+            this.page--;
+            if (this.page < 0) {
+              this.last();
             }
+          },
+          next() {
+            this.page++;
+            if (this.page >= this.count) {
+              this.first();
+            }
+          },
+          last() {
+            this.page = this.count - 1;
+          }
         }
-        $http.get("http://localhost:8080/api/customer/checkdkdanhgia?IdCustomer=" + IdCustomer + "&IdProductDetail=" + id).then(function(resp){
-        
-          if(resp.data != ''){
+        $http.get("http://localhost:8080/api/customer/checkdkdanhgia?IdCustomer=" + IdCustomer + "&IdProductDetail=" + id).then(function (resp) {
+
+          if (resp.data != '') {
             $scope.dkdanhgia = true;
           }
         })
-             // Tính điểm trung bình
-  $scope.averageRating = calculateAverageRating($scope.sp.ratings);
-  if($scope.averageRating % 1 == 0){
-    $scope.stars = $scope.averageRating;
-    $scope.stars1 = 0;
-  }
-  else{
-    $scope.stars = Math.floor($scope.averageRating);
-    $scope.stars1 = 1;
+        // Tính điểm trung bình
+        $scope.averageRating = calculateAverageRating($scope.sp.ratings);
+        if ($scope.averageRating % 1 == 0) {
+          $scope.stars = $scope.averageRating;
+          $scope.stars1 = 0;
+        }
+        else {
+          $scope.stars = Math.floor($scope.averageRating);
+          $scope.stars1 = 1;
 
 
-  }
-            
+        }
 
-  function calculateAverageRating(reviews) {
-    var totalRating = 0;
-    for (var i = 0; i < reviews.length; i++) {
-      totalRating += reviews[i].score;
-    }
-    return reviews.length > 0 ? (totalRating / reviews.length) : 0;
-  }
 
- 
-           
-            
-            $http
-              .get(
-                "http://localhost:8080/api/product/category?id=" +
-                  response.data.category.id + "&idBrand=" +response.data.brand.id + "&idDesign=" +response.data.design.id
-                  + "&idToe=" +response.data.toe.id + "&idSole=" +response.data.sole.id
-                  + "&idShoelace=" +response.data.shoelace.id + "&idHeelcushion=" +response.data.heelcushion.id
-              )
-              .then(function (e) {
-                $scope.listCungLoai = e.data;
-                // pagation
-                $scope.pagerCungLoai = {
-                  page: 0,
-                  size: 4,
-                  get items() {
-                    var start = this.page * this.size;
-                    return $scope.listCungLoai.slice(start, start + this.size);
-                  },
-                };
-              });
+        function calculateAverageRating(reviews) {
+          var totalRating = 0;
+          for (var i = 0; i < reviews.length; i++) {
+            totalRating += reviews[i].score;
+          }
+          return reviews.length > 0 ? (totalRating / reviews.length) : 0;
+        }
+
+
+
+
+        $http
+          .get(
+            "http://localhost:8080/api/product/category?id=" +
+            response.data.category.id + "&idBrand=" + response.data.brand.id + "&idDesign=" + response.data.design.id
+            + "&idToe=" + response.data.toe.id + "&idSole=" + response.data.sole.id
+            + "&idShoelace=" + response.data.shoelace.id + "&idHeelcushion=" + response.data.heelcushion.id
+          )
+          .then(function (e) {
+            $scope.listCungLoai = e.data;
+            // pagation
+            $scope.pagerCungLoai = {
+              page: 0,
+              size: 4,
+              get items() {
+                var start = this.page * this.size;
+                return $scope.listCungLoai.slice(start, start + this.size);
+              },
+            };
           });
+      });
+    var params = {
+      IdProduct: id,
+    };
+    $http({
+      method: "GET",
+      url: "http://localhost:8080/api/productdetail_color_size/getQuantityProduct",
+      params: params,
+    }).then(function (resp) {
+      $scope.quantityHT = resp.data;
+    });
+
+    $http
+      .get("http://localhost:8080/api/color/get/" + id)
+      .then(function (color) {
+        $scope.colorid = color.data;
+
+
+        $scope.selectedColor = color.data[0]; // Assign the default color ID
+        selectedVal = color.data[0];
+        $scope.listKT = [];
         var params = {
           IdProduct: id,
+          IdColor: color.data[0],
         };
         $http({
           method: "GET",
-          url: "http://localhost:8080/api/productdetail_color_size/getQuantityProduct",
+          url: "http://localhost:8080/api/productdetail_color_size/getbycolor",
           params: params,
         }).then(function (resp) {
-          $scope.quantityHT = resp.data;
-        });
-    
-        $http
-          .get("http://localhost:8080/api/color/get/" + id)
-          .then(function (color) {
-            $scope.colorid = color.data;
-            
-         
-            $scope.selectedColor = color.data[0]; // Assign the default color ID
-            selectedVal = color.data[0];
-            $scope.listKT = [];
-            var params = {
-              IdProduct: id,
-              IdColor: color.data[0],
-            };
-            $http({
-              method: "GET",
-              url: "http://localhost:8080/api/productdetail_color_size/getbycolor",
-              params: params,
-            }).then(function (resp) {
-              $scope.listKT = resp.data;
-             
-              $scope.selectedSize = resp.data[0].size.id;  // Assign the default size ID
-              selectedVal1 = resp.data[0].size.id;
-              var params = {
-                IdProduct: id,
-                IdColor: color.data[0],
-                IdSize: resp.data[0].size.id,
-              };
-              $http({
-                method: "GET",
-                url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
-                params: params,
-              }).then(function (resp) {
-                $scope.quantity = resp.data;
-              });
-            
-            });
-      
-            // $http({
-            //   method: "GET",
-            //   url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColor",
-            //   params: params,
-            // }).then(function (resp) {
-            //   $scope.quantity = resp.data;
-            // });
+          $scope.listKT = resp.data;
 
-           
-            
-          });
-         
-       
-        
-       
-        //check color
-     
-    
-        // var selected = $("input[type='radio'][name='ColorRadioGroup']:checked");
-        // if (selected.length > 0) {
-        //     selectedVal = selected.prop('value');
-        //     $scope.selectedVal = selected.prop('value');
-        // }
-        
-        // $scope.listKT = [];
-        // var params = {
-        //   IdProduct: id,
-        //   IdColor: selectedVal,
-        // };
-        // $http({
-        //   method: "GET",
-        //   url: "http://localhost:8080/api/productdetail_color_size/getbycolor",
-        //   params: params,
-        // }).then(function (resp) {
-        //   $scope.listKT = resp.data;
-        // });
-       
-  
-     
-    
-        $scope.check = function () {
-          var selected = $("input[type='radio'][name='ColorRadioGroup']:checked");
-          if (selected.length > 0) {
-            selectedVal = selected.val();
-            $scope.selectedVal = selected.val();
-          }
-          $scope.listKT = [];
+          $scope.selectedSize = resp.data[0].size.id;  // Assign the default size ID
+          selectedVal1 = resp.data[0].size.id;
           var params = {
             IdProduct: id,
-            IdColor: selectedVal,
-          };
-          $http({
-            method: "GET",
-            url: "http://localhost:8080/api/productdetail_color_size/getbycolor",
-            params: params,
-          }).then(function (resp) {
-            $scope.listKT = resp.data;
-            $scope.selectedSize = resp.data[0].size.id;  // Assign the default size ID
-            selectedVal1 = resp.data[0].size.id;
-            var params = {
-              IdProduct: id,
-              IdColor: selectedVal,
-              IdSize: resp.data[0].size.id,
-            };
-            $http({
-              method: "GET",
-              url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
-              params: params,
-            }).then(function (resp) {
-              $scope.quantity = resp.data;
-            });
-          });
-    
-          $http({
-            method: "GET",
-            url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColor",
-            params: params,
-          }).then(function (resp) {
-            $scope.quantity = resp.data;
-          });
-    
-        
-        };
-        $scope.checkSize = function () {
-          var selected1 = $("input[type='radio'][name='SizeRadioGroup']:checked");
-          if (selected1.length > 0) {
-            selectedVal1 = selected1.val();
-            $scope.selectedVal1 = selected1.val();
-          }
-          var params = {
-            IdProduct: id,
-            IdColor: selectedVal, 
-            IdSize: selectedVal1,
+            IdColor: color.data[0],
+            IdSize: resp.data[0].size.id,
           };
           $http({
             method: "GET",
@@ -360,92 +256,196 @@ $scope.deleteImage = function(index) {
           }).then(function (resp) {
             $scope.quantity = resp.data;
           });
+
+        });
+
+        // $http({
+        //   method: "GET",
+        //   url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColor",
+        //   params: params,
+        // }).then(function (resp) {
+        //   $scope.quantity = resp.data;
+        // });
+
+
+
+      });
+
+
+
+
+    //check color
+
+
+    // var selected = $("input[type='radio'][name='ColorRadioGroup']:checked");
+    // if (selected.length > 0) {
+    //     selectedVal = selected.prop('value');
+    //     $scope.selectedVal = selected.prop('value');
+    // }
+
+    // $scope.listKT = [];
+    // var params = {
+    //   IdProduct: id,
+    //   IdColor: selectedVal,
+    // };
+    // $http({
+    //   method: "GET",
+    //   url: "http://localhost:8080/api/productdetail_color_size/getbycolor",
+    //   params: params,
+    // }).then(function (resp) {
+    //   $scope.listKT = resp.data;
+    // });
+
+
+
+
+    $scope.check = function () {
+      var selected = $("input[type='radio'][name='ColorRadioGroup']:checked");
+      if (selected.length > 0) {
+        selectedVal = selected.val();
+        $scope.selectedVal = selected.val();
+      }
+      $scope.listKT = [];
+      var params = {
+        IdProduct: id,
+        IdColor: selectedVal,
+      };
+      $http({
+        method: "GET",
+        url: "http://localhost:8080/api/productdetail_color_size/getbycolor",
+        params: params,
+      }).then(function (resp) {
+        $scope.listKT = resp.data;
+        $scope.selectedSize = resp.data[0].size.id;  // Assign the default size ID
+        selectedVal1 = resp.data[0].size.id;
+        var params = {
+          IdProduct: id,
+          IdColor: selectedVal,
+          IdSize: resp.data[0].size.id,
         };
-    
-        //thêm sản phẩm vào giỏ hàng
-        $scope.addToCart = function () {
-          if (AuthService.getCustomer() === null) {
-            Swal.fire({
-              title: "Chưa Đăng Nhập",
-              showCancelButton: true,
-              confirmButtonText: "Đăng Nhập",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                location.href = "#/myorder";
-              }
-            });
-          
-            return;
+        $http({
+          method: "GET",
+          url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
+          params: params,
+        }).then(function (resp) {
+          $scope.quantity = resp.data;
+        });
+      });
+
+      $http({
+        method: "GET",
+        url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColor",
+        params: params,
+      }).then(function (resp) {
+        $scope.quantity = resp.data;
+      });
+
+
+    };
+    $scope.checkSize = function () {
+      var selected1 = $("input[type='radio'][name='SizeRadioGroup']:checked");
+      if (selected1.length > 0) {
+        selectedVal1 = selected1.val();
+        $scope.selectedVal1 = selected1.val();
+      }
+      var params = {
+        IdProduct: id,
+        IdColor: selectedVal,
+        IdSize: selectedVal1,
+      };
+      $http({
+        method: "GET",
+        url: "http://localhost:8080/api/productdetail_color_size/getQuantityProductAndColorAndSize",
+        params: params,
+      }).then(function (resp) {
+        $scope.quantity = resp.data;
+      });
+    };
+
+    //thêm sản phẩm vào giỏ hàng
+    $scope.addToCart = function () {
+      if (AuthService.getCustomer() === null) {
+        Swal.fire({
+          title: "Chưa Đăng Nhập",
+          showCancelButton: true,
+          confirmButtonText: "Đăng Nhập",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.href = "#/myorder";
           }
-          
-          if (selectedVal === "") {
-            Swal.fire("Vui lòng chọn màu sắc !!", "", "error");
-            return;
-          }
-          if (selectedVal1 === "") {
-            Swal.fire("Vui lòng chọn kích thước !!", "", "error");
-            return;
-          }
-          let soLuong = document.getElementById("Quantity").value;
-          if (soLuong.length === 0) {
-            Swal.fire("Số lượng không được bỏ trống !!", "", "error");
-            document.getElementById("Quantity").value = 1;
-            return;
-          }
-    
-          if (soLuong <= 0) {
-            Swal.fire("Số lượng phải lớn hơn 0 !!", "", "error");
-            document.getElementById("Quantity").value = 1;
-            return;
-          }
-    
-          if ($scope.quantity < soLuong) {
-            Swal.fire(
-              "Số lượng bạn thêm đang vượt quá số lượng còn hàng !!",
-              "",
-              "error"
-            );
-            return;
-          }
-    
-          var numberRegex = /^[0-9]+$/;
-          if (!numberRegex.test(soLuong)) {
-            Swal.fire("Số lượng phải là số !!", "", "error");
-            document.getElementById("Quantity").value = 1;
-            return;
-          }
-          if(IdCustomer != null){
-            $http
-            .get("http://localhost:8080/api/product/" + id)
-            .then(function (response) {
-              var unitPrice = 0;
-              if (response.data.discount > 0) {
-                unitPrice =
-                  response.data.price -
-                  response.data.price * (response.data.discount * 0.01);
-                $scope.unitPrice = unitPrice;
-              } else {
-                unitPrice = response.data.price;
-                $scope.unitPrice = unitPrice;
-              }
-            
-              $http.get("http://localhost:8080/api/cart/getCartByCustomer/"+ IdCustomer).then(function(idd){
-                
-                let idCart = idd.data.id;
-                console.log(idCart);
-                  //get cart by user
+        });
+
+        return;
+      }
+
+      if (selectedVal === "") {
+        Swal.fire("Vui lòng chọn màu sắc !!", "", "error");
+        return;
+      }
+      if (selectedVal1 === "") {
+        Swal.fire("Vui lòng chọn kích thước !!", "", "error");
+        return;
+      }
+      let soLuong = document.getElementById("Quantity").value;
+      if (soLuong.length === 0) {
+        Swal.fire("Số lượng không được bỏ trống !!", "", "error");
+        document.getElementById("Quantity").value = 1;
+        return;
+      }
+
+      if (soLuong <= 0) {
+        Swal.fire("Số lượng phải lớn hơn 0 !!", "", "error");
+        document.getElementById("Quantity").value = 1;
+        return;
+      }
+
+      if ($scope.quantity < soLuong) {
+        Swal.fire(
+          "Số lượng bạn thêm đang vượt quá số lượng còn hàng !!",
+          "",
+          "error"
+        );
+        return;
+      }
+
+      var numberRegex = /^[0-9]+$/;
+      if (!numberRegex.test(soLuong)) {
+        Swal.fire("Số lượng phải là số !!", "", "error");
+        document.getElementById("Quantity").value = 1;
+        return;
+      }
+      if (IdCustomer != null) {
+        $http
+          .get("http://localhost:8080/api/product/" + id)
+          .then(function (response) {
+            var unitPrice = 0;
+            if (response.data.discount > 0) {
+              unitPrice =
+                response.data.price -
+                response.data.price * (response.data.discount * 0.01);
+              $scope.unitPrice = unitPrice;
+            } else {
+              unitPrice = response.data.price;
+              $scope.unitPrice = unitPrice;
+            }
+
+            $http.get("http://localhost:8080/api/cart/getCartByCustomer/" + IdCustomer).then(function (idd) {
+
+              let idCart = idd.data.id;
+              //get cart by user
               $scope.listCart = [];
-              $http.get("http://localhost:8080/api/cart/"+ IdCustomer).then(function (cart) {
-             
-              
-              //   $scope.listCart = cart.data;
-              //   $scope.totalQuantity = cart.data.quantity + soLuong
-              //  if( > $scope.quantity){
-              //   Swal.fire("Số lượng bạn thêm và số lượng có trong giỏ hàng vượt quá số lượng còn hàng!!", "", "error");
-              //   document.getElementById("Quantity").value = 1;
-              //   return;
-              //  }
+              $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cart) {
+
+
+                  $scope.listCart = cart.data;
+                //   $scope.totalQuantity = cart.data.quantity + soLuong
+                //  if( > $scope.quantity){
+                //   Swal.fire("Số lượng bạn thêm và số lượng có trong giỏ hàng vượt quá số lượng còn hàng!!", "", "error");
+                //   document.getElementById("Quantity").value = 1;
+                //   return;
+                //  }
                 // add to cart
+                console.log($scope.listCart)
                 if ($scope.listCart.length === 0) {
                   $http
                     .post("http://localhost:8080/api/cart", {
@@ -458,14 +458,14 @@ $scope.deleteImage = function(index) {
                     })
                     .then(function (cart) {
                       if (cart.status === 200) {
-                        $http.get("http://localhost:8080/api/cart/"+ IdCustomer).then(function (cartL) {
+                        $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cartL) {
                           $rootScope.listCartIndex = cartL.data;
                           $rootScope.tongTienIndex = 0;
                           for (let i = 0; i < $rootScope.listCartIndex.length; i++) {
                             $rootScope.tongTienIndex +=
                               $rootScope.listCartIndex[i].unitPrice * $rootScope.listCartIndex[i].quantity;
                           }
-                      })
+                        })
                         Swal.fire("Đã thêm vào giỏ !!", "", "success");
                       }
                     });
@@ -479,19 +479,20 @@ $scope.deleteImage = function(index) {
                       $scope.listCart[i].idColor == selectedVal &&
                       $scope.listCart[i].idSize == selectedVal1
                     ) {
-                      if ($scope.listCart[i].quantity >= $scope.quantity) {
+                      let totalQuantity = parseInt($scope.listCart[i].quantity, 10) + parseInt(soLuong, 10);
+                      if (totalQuantity > $scope.quantity) {
                         Swal.fire(
-                          "Bạn đã thêm số lượng tối đa hiện có của sản phẩm vào giỏ hàng !!",
+                          "Số lượng sản phẩm và số số lượng trong giỏ hàng vượt quá số lượng sản phẩm !!",
                           "",
                           "error"
                         );
                         return;
                       }
-    
+
                       $http
                         .put(
                           "http://localhost:8080/api/cart/updateCart/" +
-                            $scope.listCart[i].id,
+                          $scope.listCart[i].id,
                           {
                             idCart: idCart,
                             idProductDetail: id,
@@ -505,15 +506,15 @@ $scope.deleteImage = function(index) {
                         )
                         .then(function (cart) {
                           if (cart.status === 200) {
-                            $http.get("http://localhost:8080/api/cart/"+ IdCustomer).then(function (cartL) {
+                            $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cartL) {
                               $rootScope.listCartIndex = cartL.data;
                               $rootScope.tongTienIndex = 0;
                               for (let i = 0; i < $rootScope.listCartIndex.length; i++) {
                                 $rootScope.tongTienIndex +=
                                   $rootScope.listCartIndex[i].unitPrice * $rootScope.listCartIndex[i].quantity;
                               }
-                          })
-                           
+                            })
+
                             Swal.fire("Đã thêm vào giỏ !!", "", "success");
                           }
                         });
@@ -532,88 +533,88 @@ $scope.deleteImage = function(index) {
                     })
                     .then(function (cart) {
                       if (cart.status === 200) {
-                        $http.get("http://localhost:8080/api/cart/"+ IdCustomer).then(function (cartL) {
+                        $http.get("http://localhost:8080/api/cart/" + IdCustomer).then(function (cartL) {
                           $rootScope.listCartIndex = cartL.data;
                           $rootScope.tongTienIndex = 0;
                           for (let i = 0; i < $rootScope.listCartIndex.length; i++) {
                             $rootScope.tongTienIndex +=
                               $rootScope.listCartIndex[i].unitPrice * $rootScope.listCartIndex[i].quantity;
                           }
-                      })
+                        })
                         Swal.fire("Đã thêm vào giỏ !!", "", "success");
                       }
                     });
                 }
               });
-              })
-            
-            });
-          }else{
-            $http
-            .get("http://localhost:8080/api/product/" + id)
-            .then(function (response) {
-              var unitPrice = 0;
-              if (response.data.discount > 0) {
-                unitPrice =
-                  response.data.price -
-                  response.data.price * (response.data.discount * 0.01);
-                $scope.unitPrice = unitPrice;
-              } else {
-                unitPrice = response.data.price;
-                $scope.unitPrice = unitPrice;
-              }
-             
-              var index = CartService.findItemIndexById(id,selectedVal,selectedVal1);
-             
-
-              if(index == -1){
-                var cartAdd = {
-                  idProductDetail : response.data,
-                  idColor : parseInt(selectedVal),
-                  idSize : parseInt(selectedVal1),
-                  quantity: parseInt(soLuong),
-                  unitPrice: unitPrice
-                }
-                CartService.addToCart(cartAdd);
-                
-              }
-              else{
-                
-                var cartUpdate = {
-                  idProductDetail : response.data,
-                  idColor : parseInt(selectedVal),
-                  idSize : parseInt(selectedVal1),
-                  quantity: parseInt(CartService.getCartItemAtIndex(index).quantity) + parseInt(soLuong),
-                  unitPrice: unitPrice
-                }
-                CartService.updateCartItem(index, cartUpdate);
-               
-              }
-
-             
-              
-              Swal.fire("Đã thêm vào giỏ !!", "", "success");
-              $rootScope.tongTienIndex1 = 0;
-              for (let i = 0; i < $rootScope.listCartIndex1.length; i++) {
-                $rootScope.tongTienIndex1 +=
-                  $rootScope.listCartIndex1[i].unitPrice * $rootScope.listCartIndex1[i].quantity;
-              }
-
-
             })
 
-          }
-        
-        };
-      };
-      $scope.detail();
+          });
+      } else {
+        $http
+          .get("http://localhost:8080/api/product/" + id)
+          .then(function (response) {
+            var unitPrice = 0;
+            if (response.data.discount > 0) {
+              unitPrice =
+                response.data.price -
+                response.data.price * (response.data.discount * 0.01);
+              $scope.unitPrice = unitPrice;
+            } else {
+              unitPrice = response.data.price;
+              $scope.unitPrice = unitPrice;
+            }
+
+            var index = CartService.findItemIndexById(id, selectedVal, selectedVal1);
 
 
-      /*********************************************************************************
+            if (index == -1) {
+              var cartAdd = {
+                idProductDetail: response.data,
+                idColor: parseInt(selectedVal),
+                idSize: parseInt(selectedVal1),
+                quantity: parseInt(soLuong),
+                unitPrice: unitPrice
+              }
+              CartService.addToCart(cartAdd);
 
-	Template Name: Belle - Multipurpose eCommerce Bootstrap4 HTML Template
-	Description: A perfect template to build beautiful and unique Glasses websites. It comes with nice and clean design.
-	Version: 1.0
+            }
+            else {
+
+              var cartUpdate = {
+                idProductDetail: response.data,
+                idColor: parseInt(selectedVal),
+                idSize: parseInt(selectedVal1),
+                quantity: parseInt(CartService.getCartItemAtIndex(index).quantity) + parseInt(soLuong),
+                unitPrice: unitPrice
+              }
+              CartService.updateCartItem(index, cartUpdate);
+
+            }
+
+
+
+            Swal.fire("Đã thêm vào giỏ !!", "", "success");
+            $rootScope.tongTienIndex1 = 0;
+            for (let i = 0; i < $rootScope.listCartIndex1.length; i++) {
+              $rootScope.tongTienIndex1 +=
+                $rootScope.listCartIndex1[i].unitPrice * $rootScope.listCartIndex1[i].quantity;
+            }
+
+
+          })
+
+      }
+
+    };
+  };
+  $scope.detail();
+
+
+  /*********************************************************************************
+
+Template Name: Belle - Multipurpose eCommerce Bootstrap4 HTML Template
+Description: A perfect template to build beautiful and unique Glasses websites. It comes with nice and clean design.
+Version: 1.0
 
 **********************************************************************************/
 
@@ -628,16 +629,16 @@ $scope.deleteImage = function(index) {
   8. Search Trigger
   9. Mobile Menu
   10 Slick Slider
-	 10.1 Homepage Slideshow 
-	 10.2 Product Slider Slick
-	 10.3 Product Slider Slick Style2
-	 10.4 Product Slider Slick Style3
-	 10.5 Product Slider Slick Fullwidth
-	 10.6 Product Slider Slick Product Page
-	 10.7 Collection Slider Slick
-	 10.8 Collection Slider Slick 4 items
-	 10.9 Logo Slider Slick
-	 10.10 Testimonial Slider Slick
+   10.1 Homepage Slideshow 
+   10.2 Product Slider Slick
+   10.3 Product Slider Slick Style2
+   10.4 Product Slider Slick Style3
+   10.5 Product Slider Slick Fullwidth
+   10.6 Product Slider Slick Product Page
+   10.7 Collection Slider Slick
+   10.8 Collection Slider Slick 4 items
+   10.9 Logo Slider Slick
+   10.10 Testimonial Slider Slick
   11. Tabs With Accordian Responsive
   12. Sidebar Categories Level links
   13. Price Range Slider
@@ -668,8 +669,8 @@ $scope.deleteImage = function(index) {
     "use strict";
 
     /*-----------------------------------------
-	  1. Preloader Loading ----------------------- 
-	  -----------------------------------------*/
+    1. Preloader Loading ----------------------- 
+    -----------------------------------------*/
     function pre_loader() {
       $("#load").fadeOut();
       $("#pre-loader").delay(0).fadeOut("slow");
@@ -677,8 +678,8 @@ $scope.deleteImage = function(index) {
     pre_loader();
 
     /*-----------------------------------------
-	 2. Promotional Bar Header ------------------
-	  -----------------------------------------*/
+   2. Promotional Bar Header ------------------
+    -----------------------------------------*/
     function promotional_bar() {
       $(".closeHeader").on("click", function () {
         $(".promotion-header").slideUp();
@@ -689,8 +690,8 @@ $scope.deleteImage = function(index) {
     promotional_bar();
 
     /*-----------------------------------------
-	 3. Currency Show/Hide dropdown -----------
-	  -----------------------------------------*/
+   3. Currency Show/Hide dropdown -----------
+    -----------------------------------------*/
     function currency_dropdown() {
       $(".selected-currency").on("click", function () {
         $("#currencies").slideToggle();
@@ -702,8 +703,8 @@ $scope.deleteImage = function(index) {
     currency_dropdown();
 
     /*-----------------------------------------
-	  4. Language Show/Hide dropdown ----------
-	  -----------------------------------------*/
+    4. Language Show/Hide dropdown ----------
+    -----------------------------------------*/
     function language_dropdown() {
       $(".language-dd").on("click", function () {
         $("#language").slideToggle();
@@ -715,8 +716,8 @@ $scope.deleteImage = function(index) {
     language_dropdown();
 
     /*-----------------------------------------
-	  5. Top Links Show/Hide dropdown ---------
-	  -----------------------------------------*/
+    5. Top Links Show/Hide dropdown ---------
+    -----------------------------------------*/
     function userlink_dropdown() {
       $(".top-header .user-menu").on("click", function () {
         if ($(window).width() < 990) {
@@ -728,8 +729,8 @@ $scope.deleteImage = function(index) {
     userlink_dropdown();
 
     /*-----------------------------------------
-	  6. Minicart Dropdown ---------------------
-	  ------------------------------------------ */
+    6. Minicart Dropdown ---------------------
+    ------------------------------------------ */
     function minicart_dropdown() {
       $(".site-header__cart").on("click", function (i) {
         i.preventDefault();
@@ -745,8 +746,8 @@ $scope.deleteImage = function(index) {
     }
     minicart_dropdown();
     /*-----------------------------------------
-	  6. Login Dropdown ---------------------
-	  ------------------------------------------ */
+    6. Login Dropdown ---------------------
+    ------------------------------------------ */
     function login_dropdown() {
       $(".site-header__login").on("click", function (i) {
         i.preventDefault();
@@ -766,8 +767,8 @@ $scope.deleteImage = function(index) {
     login_dropdown();
 
     /*-----------------------------------------
-	  7. Sticky Header ------------------------
-	  -----------------------------------------*/
+    7. Sticky Header ------------------------
+    -----------------------------------------*/
     window.onscroll = function () {
       myFunction();
     };
@@ -782,8 +783,8 @@ $scope.deleteImage = function(index) {
     }
 
     /*-----------------------------------------
-	  8. Search Trigger -----------------------
-	  ----------------------------------------- */
+    8. Search Trigger -----------------------
+    ----------------------------------------- */
     function search_bar() {
       $(".search-trigger").on("click", function () {
         const search = $(".search");
@@ -804,8 +805,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-----------------------------------------
-	  9. Mobile Menu --------------------------
-	  -----------------------------------------*/
+    9. Mobile Menu --------------------------
+    -----------------------------------------*/
     var selectors = {
       body: "body",
       sitenav: "#siteNav",
@@ -853,8 +854,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-----------------------------------------
-	  10.1 Homepage Slideshow -----------------
-	  -----------------------------------------*/
+    10.1 Homepage Slideshow -----------------
+    -----------------------------------------*/
     function home_slider() {
       $(".home-slideshow").slick({
         dots: false,
@@ -879,8 +880,8 @@ $scope.deleteImage = function(index) {
       .resize();
 
     /*-----------------------------------------
-	  10.2 Product Slider Slick ---------------
-	  -----------------------------------------*/
+    10.2 Product Slider Slick ---------------
+    -----------------------------------------*/
     function product_slider() {
       $(".productSlider").slick({
         dots: false,
@@ -916,8 +917,8 @@ $scope.deleteImage = function(index) {
     product_slider();
 
     /*-----------------------------------------
-	  10.3 Product Slider Slick Style2 --------
-	  -----------------------------------------*/
+    10.3 Product Slider Slick Style2 --------
+    -----------------------------------------*/
     function product_slider1() {
       $(".productSlider-style1").slick({
         dots: false,
@@ -953,8 +954,8 @@ $scope.deleteImage = function(index) {
     product_slider1();
 
     /*-----------------------------------------
-	  10.4 Product Slider Slick Style3 --------
-	  -----------------------------------------*/
+    10.4 Product Slider Slick Style3 --------
+    -----------------------------------------*/
     function product_slider2() {
       $(".productSlider-style2").slick({
         dots: false,
@@ -990,8 +991,8 @@ $scope.deleteImage = function(index) {
     product_slider2();
 
     /*-----------------------------------------
-	  10.5 Product Slider Slick Fullwidth -----
-	  ----------------------------------------- */
+    10.5 Product Slider Slick Fullwidth -----
+    ----------------------------------------- */
     function product_slider_full() {
       $(".productSlider-fullwidth").slick({
         dots: false,
@@ -1027,8 +1028,8 @@ $scope.deleteImage = function(index) {
     product_slider_full();
 
     /*-----------------------------------------
-	  10.6 Product Slider Slick Product Page --
-	  ----------------------------------------- */
+    10.6 Product Slider Slick Product Page --
+    ----------------------------------------- */
     function product_slider_ppage() {
       $(".productPageSlider").slick({
         dots: false,
@@ -1071,8 +1072,8 @@ $scope.deleteImage = function(index) {
     product_slider_ppage();
 
     /*-----------------------------------------
-	  10.7 Collection Slider Slick ------------
-	  ----------------------------------------- */
+    10.7 Collection Slider Slick ------------
+    ----------------------------------------- */
     function collection_slider() {
       $(".collection-grid").slick({
         dots: false,
@@ -1108,8 +1109,8 @@ $scope.deleteImage = function(index) {
     collection_slider();
 
     /*-----------------------------------------
-	  10.8 Collection Slider Slick 4 items ----
-	  ----------------------------------------- */
+    10.8 Collection Slider Slick 4 items ----
+    ----------------------------------------- */
     function collection_slider1() {
       $(".collection-grid-4item").slick({
         dots: false,
@@ -1145,8 +1146,8 @@ $scope.deleteImage = function(index) {
     collection_slider1();
 
     /*-----------------------------------------
-	  10.9 Logo Slider Slick ------------------
-	  -----------------------------------------*/
+    10.9 Logo Slider Slick ------------------
+    -----------------------------------------*/
     function logo_slider() {
       $(".logo-bar").slick({
         dots: false,
@@ -1182,8 +1183,8 @@ $scope.deleteImage = function(index) {
     logo_slider();
 
     /*-----------------------------------------
-	  10.10 Testimonial Slider Slick ----------
-	  -----------------------------------------*/
+    10.10 Testimonial Slider Slick ----------
+    -----------------------------------------*/
     function testimonial_slider() {
       $(".quotes-slider").slick({
         dots: false,
@@ -1196,8 +1197,8 @@ $scope.deleteImage = function(index) {
     testimonial_slider();
 
     /*-----------------------------------
-	  11. Tabs With Accordian Responsive
-	-------------------------------------*/
+    11. Tabs With Accordian Responsive
+  -------------------------------------*/
     $(".tab_content").hide();
     $(".tab_content:first").show();
 
@@ -1233,12 +1234,12 @@ $scope.deleteImage = function(index) {
     $("ul.tabs li").last().addClass("tab_last");
 
     /*-----------------------------------
-	  End Tabs With Accordian Responsive
-	-------------------------------------*/
+    End Tabs With Accordian Responsive
+  -------------------------------------*/
 
     /*-----------------------------------
-	  12. Sidebar Categories Level links
-	-------------------------------------*/
+    12. Sidebar Categories Level links
+  -------------------------------------*/
     function categories_level() {
       $(".sidebar_categories .sub-level a").on("click", function () {
         $(this).toggleClass("active");
@@ -1253,8 +1254,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-----------------------------------
-	 13. Price Range Slider
-	-------------------------------------*/
+   13. Price Range Slider
+  -------------------------------------*/
     function price_slider() {
       $("#slider-range").slider({
         range: true,
@@ -1267,16 +1268,16 @@ $scope.deleteImage = function(index) {
       });
       $("#amount").val(
         "$" +
-          $("#slider-range").slider("values", 0) +
-          " - $" +
-          $("#slider-range").slider("values", 1)
+        $("#slider-range").slider("values", 0) +
+        " - $" +
+        $("#slider-range").slider("values", 1)
       );
     }
     price_slider();
 
     /*-----------------------------------
-	 14. Color Swacthes
-	-------------------------------------*/
+   14. Color Swacthes
+  -------------------------------------*/
     function color_swacthes() {
       $.each($(".swacth-list"), function () {
         var n = $(".swacth-btn");
@@ -1289,8 +1290,8 @@ $scope.deleteImage = function(index) {
     color_swacthes();
 
     /*-----------------------------------
-	  15. Footer links for mobiles
-	-------------------------------------*/
+    15. Footer links for mobiles
+  -------------------------------------*/
     function footer_dropdown() {
       $(".footer-links .h4").on("click", function () {
         if ($(window).width() < 766) {
@@ -1318,8 +1319,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-------------------------------
-	  16. Site Animation
-	----------------------------------*/
+    16. Site Animation
+  ----------------------------------*/
     if ($(window).width() < 771) {
       $(".wow").removeClass("wow");
     }
@@ -1338,8 +1339,8 @@ $scope.deleteImage = function(index) {
     wow.init();
 
     /*-------------------------------
-	  17. SHOW HIDE PRODUCT TAG
-	----------------------------------*/
+    17. SHOW HIDE PRODUCT TAG
+  ----------------------------------*/
     $(".product-tags li").eq(10).nextAll().hide();
     $(".btnview").on("click", function () {
       $(".product-tags li").not(".filter--active").show();
@@ -1347,8 +1348,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-------------------------------
-	  18. SHOW HIDE PRODUCT Filters
-	----------------------------------*/
+    18. SHOW HIDE PRODUCT Filters
+  ----------------------------------*/
     $(".btn-filter").on("click", function () {
       $(".filterbar").toggleClass("active");
     });
@@ -1364,8 +1365,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-------------------------------
-	 19. Timer Count Down
-	----------------------------------*/
+   19. Timer Count Down
+  ----------------------------------*/
     $("[data-countdown]").each(function () {
       var $this = $(this),
         finalDate = $(this).data("countdown");
@@ -1379,8 +1380,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-------------------------------
-	 20.Scroll Top ------------------
-	---------------------------------*/
+   20.Scroll Top ------------------
+  ---------------------------------*/
     function scroll_top() {
       $("#site-scroll").on("click", function () {
         $("html, body").animate({ scrollTop: 0 }, 1000);
@@ -1398,8 +1399,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*-------------------------------
-	  21. Height Product Grid Image
-	----------------------------------*/
+    21. Height Product Grid Image
+  ----------------------------------*/
     function productGridView() {
       var gridRows = [];
       var tempRow = [];
@@ -1464,7 +1465,7 @@ $scope.deleteImage = function(index) {
 
     /*--------------------------
       24. Product Zoom
-	---------------------------- */
+  ---------------------------- */
     function product_zoom() {
       $(".zoompro").elevateZoom({
         gallery: "gallery",
@@ -1480,7 +1481,7 @@ $scope.deleteImage = function(index) {
 
     /*--------------------------
       25. Product Page Popup ---
-	---------------------------- */
+  ---------------------------- */
     function video_popup() {
       if ($(".popup-video").length) {
         $(".popup-video").magnificPopup({
@@ -1511,8 +1512,8 @@ $scope.deleteImage = function(index) {
     inquiry_popup();
 
     /*----------------------------------
-	  26. Quantity Plus Minus
-	------------------------------------*/
+    26. Quantity Plus Minus
+  ------------------------------------*/
     function qnt_incre() {
       $(".qtyBtn").on("click", function () {
         var qtyField = $(this).parent(".qtyField"),
@@ -1530,8 +1531,8 @@ $scope.deleteImage = function(index) {
     qnt_incre();
 
     /*----------------------------------
-	  27. Visitor Fake Message
-	------------------------------------*/
+    27. Visitor Fake Message
+  ------------------------------------*/
     var userLimit = $(".userViewMsg").attr("data-user"),
       userTime = $(".userViewMsg").attr("data-time");
     $(".uersView").text(Math.floor(Math.random() * userLimit));
@@ -1540,8 +1541,8 @@ $scope.deleteImage = function(index) {
     }, userTime);
 
     /*----------------------------------
-	  28. Product Tabs
-	------------------------------------*/
+    28. Product Tabs
+  ------------------------------------*/
     $(".tab-content").hide();
     $(".tab-content:first").show();
     /* if in tab mode */
@@ -1589,8 +1590,8 @@ $scope.deleteImage = function(index) {
     });
 
     /*--------------------------------------
-	  29. Promotion / Notification Cookie Bar 
-	  -------------------------------------- */
+    29. Promotion / Notification Cookie Bar 
+    -------------------------------------- */
     function cookie_promo() {
       if (Cookies.get("promotion") != "true") {
         $(".notification-bar").show();
@@ -1603,12 +1604,12 @@ $scope.deleteImage = function(index) {
     }
     cookie_promo();
     /* --------------------------------------
-	 	End Promotion / Notification Cookie Bar 
-	 -------------------------------------- */
+      End Promotion / Notification Cookie Bar 
+   -------------------------------------- */
 
     /* --------------------------------------
-	 	30. Image to background js
-	 -------------------------------------- */
+      30. Image to background js
+   -------------------------------------- */
     $(".bg-top").parent().addClass("b-top");
     $(".bg-bottom").parent().addClass("b-bottom");
     $(".bg-center").parent().addClass("b-center");
@@ -1632,12 +1633,12 @@ $scope.deleteImage = function(index) {
       el.hide();
     });
     /* --------------------------------------
-	 	End Image to background js
-	 -------------------------------------- */
+      End Image to background js
+   -------------------------------------- */
 
     /*----------------------------------
-	32. Related Product Slider ---------
-	------------------------------------*/
+  32. Related Product Slider ---------
+  ------------------------------------*/
     function related_slider() {
       $(".related-product .productSlider").slick({
         dots: false,
@@ -1662,12 +1663,12 @@ $scope.deleteImage = function(index) {
     }
     related_slider();
     /*----------------------------------
-	  End Related Product Slider
-	  ------------------------------------*/
+    End Related Product Slider
+    ------------------------------------*/
 
     /*-----------------------------------
-	  33. Infinite Scroll js
-	  -------------------------------------*/
+    33. Infinite Scroll js
+    -------------------------------------*/
     function load_more() {
       $(".product-load-more .item").slice(0, 16).show();
       $(".loadMore").on("click", function (e) {
@@ -1696,8 +1697,8 @@ $scope.deleteImage = function(index) {
     }
     load_more_post();
     /*-----------------------------------
-	  End Infinite Scroll js
-	  -------------------------------------*/
+    End Infinite Scroll js
+    -------------------------------------*/
   })(jQuery);
 
 
