@@ -438,8 +438,13 @@ $scope.deleteImage = function(index) {
               $http.get("http://localhost:8080/api/cart/"+ IdCustomer).then(function (cart) {
              
               
-                $scope.listCart = cart.data;
-               
+              //   $scope.listCart = cart.data;
+              //   $scope.totalQuantity = cart.data.quantity + soLuong
+              //  if( > $scope.quantity){
+              //   Swal.fire("Số lượng bạn thêm và số lượng có trong giỏ hàng vượt quá số lượng còn hàng!!", "", "error");
+              //   document.getElementById("Quantity").value = 1;
+              //   return;
+              //  }
                 // add to cart
                 if ($scope.listCart.length === 0) {
                   $http
