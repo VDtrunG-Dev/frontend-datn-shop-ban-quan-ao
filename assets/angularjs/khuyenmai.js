@@ -196,11 +196,7 @@ window.KhuyenMaiController = function ($scope, $http, $location, $routeParams) {
         minimum:'',
     }
 
-    //add
     $scope.add = function(){
-
-        
-        
         if ($scope.form.startdate >= $scope.form.enddate) {
             Swal.fire("Ngày Bắt Đầu Phải Nhỏ Hơn Ngày Kết Thúc", "", "error");
             return false; // Ngăn chặn sự kiện hoặc thực hiện các hành động phù hợp khác

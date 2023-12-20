@@ -72,19 +72,19 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
             if (result.isConfirmed) {
                 $http.delete("http://localhost:8080/api/category/delete/" + id)
                     .then(function (response){
+                        console.log(response)
                         if (response.status === 200){
-                            Swal.fire('Xóa thành công !', '', 'success')
+                            
                             $scope.loadAll();
                             $http.get("http://localhost:8080/api/category/stopworking").then(function(response){
                                 $scope.categoryStops = response.data;
                             })
+                            Swal.fire('Xóa thành công !', '', 'success')
                         } else {
-                            // Xử lý khi có lỗi từ server nhưng không phải lỗi 200
                             Swal.fire('Xóa thất bại !', '', 'error');
                         }
                     })
                     .catch(function(err){
-                        // Xử lý lỗi khi gọi API delete
                         $http.put("http://localhost:8080/api/category/deletefake/" + id)
                             .then(function(response){
                                 Swal.fire(' Đã chuyển ngừng hoạt động', '', 'success')
@@ -94,7 +94,6 @@ window.DanhMucController = function($scope, $http, $location,$routeParams){
                                 })
                             })
                             .catch(function(error){
-                                // Xử lý lỗi khi gọi API put
                                 Swal.fire('Lỗi khi xóa danh mục! Thử lại sau', '', 'error');
                                 console.error('Error:', error);
                             });
