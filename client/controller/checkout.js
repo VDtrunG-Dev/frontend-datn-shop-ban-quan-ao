@@ -57,13 +57,7 @@ window.CheckOutController = function ($http, $scope, $rootScope, $routeParams, $
             );
             $scope.check = true;
             location.href = "#/cart";
-          } else {
-            // No errors, proceed to checkout
-            $scope.listCartCheck = $scope.listCart;
-            if ($scope.listCartCheck.length === 0) {
-              Swal.fire('Giỏ hàng của bạn đang rỗng !', '', 'error');
-            } 
-          }
+          } 
         });
       });
 
